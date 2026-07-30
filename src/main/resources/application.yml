@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: finance-manager
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/finance_manager}
+    username: ${DB_USERNAME:finance}
+    password: ${DB_PASSWORD:finance}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        jdbc.time_zone: UTC
+  flyway:
+    enabled: true
+server:
+  port: ${SERVER_PORT:8080}
+  error:
+    include-message: never
+jwt:
+  secret: ${JWT_SECRET:change-me-in-production-this-key-must-be-at-least-32-bytes}
+  expiration: ${JWT_EXPIRATION:3600s}
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /v3/api-docs
+  show-actuator: false
+  default-produces-media-type: application/json
+spring.data.web.pageable.max-page-size: 100
