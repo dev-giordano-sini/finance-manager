@@ -12,6 +12,7 @@ Production-oriented personal finance REST API built with Java 21, Spring Boot 3,
 - OpenAPI 3 documentation with Swagger UI
 - Multi-stage, non-root Docker image and a health-checked Compose stack
 - Optimistic locking and automatic UTC audit timestamps on all entities
+- Automated quality gate with unit tests, PostgreSQL integration tests, Checkstyle, SpotBugs, and JaCoCo
 
 ## Prerequisites
 
@@ -79,6 +80,8 @@ The full interactive contract is exposed by Swagger UI and the OpenAPI document 
 ```bash
 mvn clean verify
 ```
+
+The verification lifecycle runs unit and Testcontainers-backed migration tests, static analysis, style checks, and generates the JaCoCo HTML report in `target/site/jacoco`. Docker must be available to execute the PostgreSQL integration test; it is skipped automatically when Docker is unavailable. The same quality gate runs for every pull request in GitHub Actions.
 
 ## Configuration
 
