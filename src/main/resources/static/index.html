@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f3f5f0"><title>Finora — Le tue finanze</title>
+  <link rel="icon" href="/favicon.svg"><link rel="stylesheet" href="/css/app.css">
+</head>
+<body>
+  <aside class="sidebar">
+    <a class="brand" href="#"><span class="brand-mark">F</span><span>finora</span></a>
+    <nav aria-label="Navigazione principale">
+      <p class="nav-label">Workspace</p>
+      <a class="nav-item active" href="#overview" data-view="overview"><span class="icon">⌂</span>Panoramica</a>
+      <a class="nav-item" href="#transactions" data-view="transactions"><span class="icon">↕</span>Movimenti <span class="pill">24</span></a>
+      <a class="nav-item" href="#budgets" data-view="budgets"><span class="icon">◎</span>Budget</a>
+      <a class="nav-item" href="#categories" data-view="categories"><span class="icon">◇</span>Categorie</a>
+      <p class="nav-label spaced">Analisi</p>
+      <a class="nav-item" href="#reports"><span class="icon">⌁</span>Report</a>
+      <a class="nav-item" href="#goals"><span class="icon">☆</span>Obiettivi</a>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="pro-card"><span class="spark">✦</span><strong>Fai crescere i risparmi</strong><p>Scopri insight personalizzati sul tuo andamento.</p><button>Scopri Finora Plus</button></div>
+      <a class="nav-item" href="#settings"><span class="icon">⚙</span>Impostazioni</a>
+      <div class="profile"><div class="avatar">GB</div><div><strong>Giulia Bianchi</strong><small>giulia@finora.it</small></div><button aria-label="Menu profilo">•••</button></div>
+    </div>
+  </aside>
+  <main>
+    <header class="topbar">
+      <button class="mobile-menu" aria-label="Apri menu">☰</button>
+      <div class="date-chip"><span>●</span> Dati aggiornati adesso</div>
+      <div class="top-actions"><button class="icon-button" aria-label="Cerca">⌕</button><button class="icon-button notification" aria-label="Notifiche">♢</button><button class="primary-button" id="newTransaction">＋ Nuovo movimento</button></div>
+    </header>
+    <div class="content">
+      <section class="welcome"><div><p class="eyebrow">GIOVEDÌ, 30 LUGLIO</p><h1>Bentornata, Giulia <span>👋</span></h1><p>Ecco come stanno andando le tue finanze questo mese.</p></div><div class="period-selector"><button>‹</button><strong>Luglio 2026</strong><button>›</button></div></section>
+      <section class="metric-grid">
+        <article class="metric featured"><div class="metric-head"><span>Saldo disponibile</span><span class="metric-icon">▰</span></div><strong class="amount">€ 8.420,35</strong><div class="metric-foot positive">↗ 12,4% <span>rispetto a giugno</span></div><div class="mini-bars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></article>
+        <article class="metric"><div class="metric-head"><span>Entrate</span><span class="round-icon income">↙</span></div><strong class="amount">€ 4.280,00</strong><div class="metric-foot positive">↗ 8,2% <span>questo mese</span></div><svg class="sparkline" viewBox="0 0 180 50"><path d="M2 42 C30 39 28 25 54 29 S85 38 102 22 S135 25 154 10 S175 9 178 3"/></svg></article>
+        <article class="metric"><div class="metric-head"><span>Uscite</span><span class="round-icon expense">↗</span></div><strong class="amount">€ 2.156,80</strong><div class="metric-foot negative">↗ 3,1% <span>questo mese</span></div><svg class="sparkline coral" viewBox="0 0 180 50"><path d="M2 20 C25 11 38 32 58 24 S90 9 110 29 S144 37 178 14"/></svg></article>
+        <article class="metric"><div class="metric-head"><span>Risparmio</span><span class="round-icon saving">✦</span></div><strong class="amount">€ 2.123,20</strong><div class="metric-foot positive">49,6% <span>delle entrate</span></div><div class="progress"><i style="width:49.6%"></i></div><small class="progress-label">Obiettivo mensile: 40%</small></article>
+      </section>
+      <section class="dashboard-grid">
+        <article class="panel spending"><div class="panel-header"><div><h2>Andamento mensile</h2><p>Entrate e uscite negli ultimi 6 mesi</p></div><button class="select-button">Ultimi 6 mesi⌄</button></div><div class="legend"><span><i class="green-dot"></i>Entrate</span><span><i class="coral-dot"></i>Uscite</span></div><div class="chart"><div class="y-labels"><span>€6k</span><span>€4k</span><span>€2k</span><span>€0</span></div><div class="chart-area"><div class="grid-lines"></div><svg viewBox="0 0 600 205" preserveAspectRatio="none"><defs><linearGradient id="fill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#397a68" stop-opacity=".2"/><stop offset="1" stop-color="#397a68" stop-opacity="0"/></linearGradient></defs><path class="area" d="M0 148 C55 135 70 86 120 100 S195 122 240 73 S322 91 360 58 S430 48 480 72 S548 28 600 38 L600 205 L0 205Z"/><path class="income-line" d="M0 148 C55 135 70 86 120 100 S195 122 240 73 S322 91 360 58 S430 48 480 72 S548 28 600 38"/><path class="expense-line" d="M0 172 C55 160 80 137 120 150 S190 142 240 155 S315 116 360 130 S430 149 480 125 S545 143 600 118"/></svg><div class="x-labels"><span>Feb</span><span>Mar</span><span>Apr</span><span>Mag</span><span>Giu</span><span>Lug</span></div></div></div></article>
+        <article class="panel categories"><div class="panel-header"><div><h2>Spese per categoria</h2><p>Luglio 2026</p></div><button class="more">•••</button></div><div class="category-body"><div class="donut"><div><strong>€ 2.156</strong><span>Totale spese</span></div></div><ul id="categoryList"></ul></div><button class="link-button">Vedi tutte le categorie →</button></article>
+        <article class="panel transactions"><div class="panel-header"><div><h2>Movimenti recenti</h2><p>Le ultime attività sul tuo conto</p></div><button class="link-button">Vedi tutti →</button></div><div class="transaction-list" id="transactionList"></div></article>
+        <article class="panel budget"><div class="panel-header"><div><h2>Budget mensili</h2><p>Il tuo utilizzo questo mese</p></div><button class="link-button">Gestisci →</button></div><div id="budgetList"></div></article>
+      </section>
+    </div>
+  </main>
+  <div class="modal" id="transactionModal" aria-hidden="true"><div class="modal-card"><button class="modal-close" aria-label="Chiudi">×</button><p class="eyebrow">NUOVO MOVIMENTO</p><h2>Aggiungi una transazione</h2><p class="modal-subtitle">Tieni aggiornato il tuo saldo in pochi secondi.</p><form id="transactionForm"><div class="type-toggle"><label><input type="radio" name="type" value="EXPENSE" checked><span>Uscita</span></label><label><input type="radio" name="type" value="INCOME"><span>Entrata</span></label></div><label>Importo<div class="amount-input"><span>€</span><input name="amount" type="number" step="0.01" min="0.01" placeholder="0,00" required></div></label><div class="form-row"><label>Categoria<select name="categoryId" required><option value="1">Casa</option><option value="2">Alimentari</option><option value="3">Trasporti</option></select></label><label>Data<input name="date" type="date" value="2026-07-30" required></label></div><label>Descrizione<input name="description" placeholder="Es. Spesa settimanale"></label><button class="primary-button submit" type="submit">Salva movimento</button></form></div></div>
+  <div class="toast" role="status">✓ Movimento aggiunto con successo</div>
+  <script type="module" src="/js/app.js"></script>
+</body></html>
