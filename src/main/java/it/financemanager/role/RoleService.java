@@ -16,7 +16,7 @@ public class RoleService {
         roleRepository.save(role);
     }
 
-    public Role getUserRole() {
-        return roleRepository.findByCode("USER").orElse(null);
+    public Role getUserRole(String roleCode) {
+        return roleRepository.findByCode(roleCode).orElse(null);
     }
 }
