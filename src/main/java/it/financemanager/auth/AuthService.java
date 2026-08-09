@@ -2,7 +2,9 @@ package it.financemanager.auth;
 
 import it.financemanager.common.exception.ConflictException;
 import it.financemanager.common.security.JwtService;
-import it.financemanager.user.Role;
+import it.financemanager.role.Role;
+import it.financemanager.role.RoleRepository;
+import it.financemanager.role.RoleService;
 import it.financemanager.user.User;
 import it.financemanager.user.UserRepository;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -20,15 +22,18 @@ public class AuthService {
     private final PasswordEncoder encoder;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwt;
-    public AuthService(UserRepository users, PasswordEncoder encoder, AuthenticationManager authenticationManager, JwtService jwt) {
+    private final RoleService roleService;
+    public AuthService(UserRepository users, PasswordEncoder encoder, AuthenticationManager authenticationManager, JwtService jwt, RoleService roleService) {
         this.users = users; this.encoder = encoder; this.authenticationManager = authenticationManager; this.jwt = jwt;
+        this.roleService = roleService;
     }
     @Transactional
     public AuthResponse register(RegisterRequest request) {
         String email = request.email().trim().toLowerCase(Locale.ROOT);
         if (users.existsByEmailIgnoreCase(email)) throw new ConflictException("An account with this email already exists");
         try {
-            users.saveAndFlush(new User(email, encoder.encode(request.password()), request.name().trim(), Role.USER));
+            Role user = roleService.getUserRole();
+            users.saveAndFlush(new User(email, encoder.encode(request.password()), request.name().trim(), user));
         } catch (DataIntegrityViolationException ex) {
             throw new ConflictException("An account with this email already exists");
         }

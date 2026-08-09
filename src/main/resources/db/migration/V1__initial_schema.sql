@@ -1,8 +1,13 @@
+CREATE TABLE roles (
+                       id BIGSERIAL PRIMARY KEY, version BIGINT NOT NULL DEFAULT 0,
+                       created_at TIMESTAMPTZ NOT NULL, updated_at TIMESTAMPTZ NOT NULL,
+                       code varchar(50) NOT NULL UNIQUE, description varchar(255)
+);
 CREATE TABLE users (
     id BIGSERIAL PRIMARY KEY, version BIGINT NOT NULL DEFAULT 0,
     created_at TIMESTAMPTZ NOT NULL, updated_at TIMESTAMPTZ NOT NULL,
-    email VARCHAR(254) NOT NULL, password VARCHAR(255) NOT NULL, name VARCHAR(100) NOT NULL, role VARCHAR(20) NOT NULL,
-    CONSTRAINT uk_users_email UNIQUE (email), CONSTRAINT ck_users_role CHECK (role IN ('USER','ADMIN'))
+    email VARCHAR(254) NOT NULL, password VARCHAR(255) NOT NULL, name VARCHAR(100) NOT NULL,
+    role_id BIGINT NOT NULL REFERENCES roles(id), CONSTRAINT uk_users_email UNIQUE (email)
 );
 CREATE TABLE categories (
     id BIGSERIAL PRIMARY KEY, version BIGINT NOT NULL DEFAULT 0,
