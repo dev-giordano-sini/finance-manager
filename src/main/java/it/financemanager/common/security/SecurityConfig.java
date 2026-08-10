@@ -36,7 +36,7 @@ import java.util.Optional;
 public class SecurityConfig {
     @Bean
     UserDetailsService userDetailsService(UserRepository repository, RoleRepository roleRepository) {
-        Role userRole = roleRepository.findByCode(BaseRole.ROLE_USER.name()).orElse(new Role(BaseRole.ROLE_USER.name(), ""));
+        Role userRole = roleRepository.findByCode(BaseRole.ROLE_USER.getRole()).orElse(new Role(BaseRole.ROLE_USER.getRole(), ""));
         return email -> repository.findByEmailIgnoreCase(email)
                 .map(user -> User.withUsername(user.getEmail()).password(user.getPassword()).roles(userRole.getCode()).build())
                 .orElseThrow(() -> new UsernameNotFoundException("Invalid credentials"));
