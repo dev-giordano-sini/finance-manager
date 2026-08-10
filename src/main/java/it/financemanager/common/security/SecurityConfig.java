@@ -26,9 +26,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.config.Customizer;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.Objects;
-import java.util.Optional;
+import java.util.List;
+
 
 @Configuration
 @EnableMethodSecurity
@@ -57,6 +61,8 @@ public class SecurityConfig {
     SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthenticationFilter filter, ObjectMapper mapper) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable).cors(cors -> {})
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .csrf(AbstractHttpConfigurer::disable)
+                .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/auth/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                         .anyRequest().authenticated())
@@ -66,6 +72,8 @@ public class SecurityConfig {
                 .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
+
+
     private static void writeProblem(HttpServletResponse response, ObjectMapper mapper, int status, String title, String detail) throws java.io.IOException {
         response.setStatus(status);
         response.setContentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE);
@@ -73,4 +81,5 @@ public class SecurityConfig {
         problem.setTitle(title);
         mapper.writeValue(response.getOutputStream(), problem);
     }
+
 }
