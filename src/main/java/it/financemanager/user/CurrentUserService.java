@@ -12,4 +12,10 @@ public class CurrentUserService {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         return repository.findByEmailIgnoreCase(email).orElseThrow(() -> new ResourceNotFoundException("User", 0L));
     }
+
+    public CurrentUserResponse getCurrentUser() {
+        User currentUser = get();
+        return CurrentUserResponse.from(currentUser);
+    }
+
 }

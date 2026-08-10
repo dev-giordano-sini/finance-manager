@@ -32,7 +32,7 @@ public class AuthService {
         if (users.existsByEmailIgnoreCase(email)) throw new ConflictException("An account with this email already exists");
         try {
             Role user = roleService.getUserRole(request.roleCode().trim());
-            users.saveAndFlush(new User(email, passwordEncoder.encode(request.password()), request.name().trim(), user));
+            users.saveAndFlush(new User(email, passwordEncoder.encode(request.password()), request.name().trim(), request.surname(), user));
         } catch (DataIntegrityViolationException ex) {
             throw new ConflictException("An account with this email already exists");
         }
