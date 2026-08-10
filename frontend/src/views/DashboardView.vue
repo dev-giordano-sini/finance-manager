@@ -1,8 +1,58 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'; import { Doughnut, Line } from 'vue-chartjs'; import { Chart as ChartJS, ArcElement, CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend, Filler } from 'chart.js'; import PageHeader from '../components/PageHeader.vue'; import StatCard from '../components/StatCard.vue'; import EmptyState from '../components/EmptyState.vue'; import { categoriesApi, transactionsApi, budgetsApi } from '../api/resources'; import type { Budget, Category, Transaction } from '../types'; import { currency, shortDate } from '../utils/format'
-ChartJS.register(ArcElement,CategoryScale,LinearScale,PointElement,LineElement,Tooltip,Legend,Filler); defineEmits<{menu:[]}>(); const loading=ref(true);const transactions=ref<Transaction[]>([]);const categories=ref<Category[]>([]);const budgets=ref<Budget[]>([])
-onMounted(async()=>{try{const [t,c,b]=await Promise.all([transactionsApi.list({size:100,sort:'date,asc'}),categoriesApi.list(),budgetsApi.list()]);transactions.value=t.data.content;categories.value=c.data;budgets.value=b.data}finally{loading.value=false}})
-const income=computed(()=>transactions.value.filter(t=>t.type==='INCOME').reduce((s,t)=>s+Number(t.amount),0));const expense=computed(()=>transactions.value.filter(t=>t.type==='EXPENSE').reduce((s,t)=>s+Number(t.amount),0));const balance=computed(()=>income.value-expense.value)
-const expenseGroups=computed(()=>categories.value.map(c=>({name:c.name,color:c.color,value:transactions.value.filter(t=>t.type==='EXPENSE'&&t.categoryId===c.id).reduce((s,t)=>s+Number(t.amount),0)})).filter(x=>x.value>0));const doughnutData=computed(()=>({labels:expenseGroups.value.map(x=>x.name),datasets:[{data:expenseGroups.value.map(x=>x.value),backgroundColor:expenseGroups.value.map(x=>x.color),borderWidth:0}]}));const months=computed(()=>{const map=new Map<string,{i:number,e:number}>();transactions.value.forEach(t=>{const k=t.date.slice(0,7);const v=map.get(k)||{i:0,e:0};v[t.type==='INCOME'?'i':'e']+=Number(t.amount);map.set(k,v)});return [...map].slice(-6)});const lineData=computed(()=>({labels:months.value.map(([k])=>new Date(k+'-02').toLocaleDateString('it-IT',{month:'short'}),datasets:[{label:'Entrate',data:months.value.map(([,v])=>v.i),borderColor:'#5bb89b',backgroundColor:'#5bb89b22',fill:true,tension:.4},{label:'Uscite',data:months.value.map(([,v])=>v.e),borderColor:'#ff7d6e',backgroundColor:'#ff7d6e18',fill:true,tension:.4}]}));const options={responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}}}
+import { computed, onMounted, ref } from 'vue'
+import { Doughnut, Line } from 'vue-chartjs'
+import { ArcElement, CategoryScale, Chart as ChartJS, Filler, Legend, LinearScale, LineElement, PointElement, Tooltip } from 'chart.js'
+import EmptyState from '../components/EmptyState.vue'
+import PageHeader from '../components/PageHeader.vue'
+import StatCard from '../components/StatCard.vue'
+import { dashboardApi } from '../api/resources'
+import { useApiError } from '../composables/useApiError'
+import type { Dashboard } from '../types'
+import { currency, shortDate } from '../utils/format'
+
+ChartJS.register(ArcElement, CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend, Filler)
+defineEmits<{ menu: [] }>()
+const loading = ref(true), dashboard = ref<Dashboard | null>(null), from = ref(''), to = ref('')
+const { error, capture } = useApiError()
+const commonOptions = { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+const doughnutOptions = { ...commonOptions, cutout: '72%' }
+const lineData = computed(() => ({
+  labels: dashboard.value?.dailyCashFlow.map(day => shortDate(day.date)) ?? [],
+  datasets: [
+    { label: 'Entrate', data: dashboard.value?.dailyCashFlow.map(day => +day.income) ?? [], borderColor: '#5bb89b', backgroundColor: '#5bb89b1c', fill: true, tension: .35 },
+    { label: 'Uscite', data: dashboard.value?.dailyCashFlow.map(day => +day.expenses) ?? [], borderColor: '#ff7d6e', backgroundColor: '#ff7d6e14', fill: true, tension: .35 },
+  ],
+}))
+const doughnutData = computed(() => ({
+  labels: dashboard.value?.expensesByCategory.map(item => item.categoryName) ?? [],
+  datasets: [{ data: dashboard.value?.expensesByCategory.map(item => +item.amount) ?? [], backgroundColor: dashboard.value?.expensesByCategory.map(item => item.categoryColor) ?? [], borderWidth: 0 }],
+}))
+async function loadDashboard() {
+  loading.value = true; error.value = ''
+  try {
+    const { data } = await dashboardApi.get({ from: from.value || undefined, to: to.value || undefined })
+    dashboard.value = data; from.value = data.from; to.value = data.to
+  } catch (reason) { capture(reason) } finally { loading.value = false }
+}
+onMounted(loadDashboard)
 </script>
-<template><PageHeader title="Buongiorno!" subtitle="Ecco come stanno andando le tue finanze." @menu="$emit('menu')"><RouterLink class="btn primary" to="/transactions">+ Nuovo movimento</RouterLink></PageHeader><div v-if="loading" class="loading">Caricamento panoramica…</div><template v-else><section class="stats"><StatCard label="Saldo totale" :value="currency(balance)" icon="€" tone="purple" note="Entrate meno uscite"/><StatCard label="Entrate" :value="currency(income)" icon="↗" tone="green"/><StatCard label="Uscite" :value="currency(expense)" icon="↘" tone="coral"/><StatCard label="Budget attivi" :value="String(budgets.length)" icon="◎" tone="gold"/></section><section class="dashboard-grid"><article class="panel chart-wide"><div class="panel-title"><div><h3>Andamento finanziario</h3><p>Entrate e uscite negli ultimi mesi</p></div></div><div class="chart"><Line v-if="months.length" :data="lineData" :options="options"/><EmptyState v-else title="Nessun dato" text="Aggiungi un movimento per vedere l'andamento."/></div></article><article class="panel"><div class="panel-title"><div><h3>Spese per categoria</h3><p>La distribuzione delle tue uscite</p></div></div><div class="donut"><Doughnut v-if="expenseGroups.length" :data="doughnutData" :options="options"/><EmptyState v-else title="Nessuna spesa" text="Le categorie appariranno qui."/></div></article></section><article class="panel recent"><div class="panel-title"><div><h3>Movimenti recenti</h3><p>Le ultime attività sul tuo conto</p></div><RouterLink to="/transactions">Vedi tutti →</RouterLink></div><div v-if="transactions.length" class="transaction-list"><div v-for="item in [...transactions].reverse().slice(0,5)" :key="item.id" class="transaction-row"><span class="category-dot" :style="{background:categories.find(c=>c.id===item.categoryId)?.color}"></span><div><b>{{ item.description || item.categoryName }}</b><small>{{ item.categoryName }} · {{ shortDate(item.date) }}</small></div><strong :class="item.type==='INCOME'?'positive':'negative'">{{ item.type==='INCOME'?'+':'−' }} {{ currency(Number(item.amount)) }}</strong></div></div><EmptyState v-else title="Nessun movimento" text="Registra la tua prima entrata o uscita."/></article></template>
+
+<template>
+  <PageHeader title="La tua panoramica" subtitle="Entrate, uscite e abitudini di spesa in un solo posto." @menu="$emit('menu')"><RouterLink class="btn primary" to="/transactions">+ Nuovo movimento</RouterLink></PageHeader>
+  <form class="dashboard-filters" @submit.prevent="loadDashboard"><span>Periodo</span><label>Dal <input v-model="from" type="date" :max="to || undefined"></label><label>Al <input v-model="to" type="date" :min="from || undefined"></label><button class="btn secondary" :disabled="loading">Aggiorna</button></form>
+  <div v-if="error" class="error dashboard-error">{{ error }} <button @click="loadDashboard">Riprova</button></div>
+  <div v-if="loading" class="loading">Caricamento panoramica…</div>
+  <template v-else-if="dashboard">
+    <section class="stats">
+      <StatCard label="Saldo del periodo" :value="currency(+dashboard.balance)" icon="€" tone="purple" :note="`${dashboard.transactionCount} movimenti`" />
+      <StatCard label="Entrate" :value="currency(+dashboard.totalIncome)" icon="↗" tone="green" />
+      <StatCard label="Uscite" :value="currency(+dashboard.totalExpenses)" icon="↘" tone="coral" />
+      <StatCard label="Categorie di spesa" :value="String(dashboard.expensesByCategory.length)" icon="◈" tone="gold" />
+    </section>
+    <section class="dashboard-grid">
+      <article class="panel"><div class="panel-title"><div><h3>Andamento finanziario</h3><p>Entrate e uscite giorno per giorno</p></div><div class="chart-key"><span>Entrate</span><span class="expense-key">Uscite</span></div></div><div class="chart"><Line v-if="dashboard.dailyCashFlow.length" :data="lineData" :options="commonOptions" /><EmptyState v-else title="Nessun dato" text="Aggiungi un movimento per vedere l'andamento." /></div></article>
+      <article class="panel expense-panel"><div class="panel-title"><div><h3>Spese per categoria</h3><p>Distribuzione nel periodo</p></div></div><template v-if="dashboard.expensesByCategory.length"><div class="donut"><Doughnut :data="doughnutData" :options="doughnutOptions" /></div><ul class="category-legend"><li v-for="item in dashboard.expensesByCategory.slice(0, 5)" :key="item.categoryId"><i :style="{background:item.categoryColor}"></i><span>{{ item.categoryName }}</span><b>{{ (+item.percentage).toFixed(0) }}%</b></li></ul></template><EmptyState v-else title="Nessuna spesa" text="Le categorie appariranno qui." /></article>
+    </section>
+    <article class="panel recent"><div class="panel-title"><div><h3>Movimenti recenti</h3><p>Le ultime attività del periodo selezionato</p></div><RouterLink to="/transactions">Vedi tutti →</RouterLink></div><div v-if="dashboard.recentTransactions.length"><div v-for="item in dashboard.recentTransactions" :key="item.id" class="transaction-row"><span class="category-avatar" :class="item.type.toLowerCase()">{{ item.categoryName.charAt(0) }}</span><div><b>{{ item.description || item.categoryName }}</b><small>{{ item.categoryName }} · {{ shortDate(item.date) }}</small></div><strong :class="item.type==='INCOME'?'positive':'negative'">{{ item.type==='INCOME'?'+':'−' }} {{ currency(+item.amount) }}</strong></div></div><EmptyState v-else title="Nessun movimento" text="Registra la tua prima entrata o uscita." /></article>
+  </template>
+</template>
