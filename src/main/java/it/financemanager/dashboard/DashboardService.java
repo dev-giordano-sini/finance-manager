@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.Clock;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -24,14 +25,16 @@ public class DashboardService {
 
     private final TransactionRepository transactions;
     private final CurrentUserService currentUser;
+    private final Clock clock;
 
-    public DashboardService(TransactionRepository transactions, CurrentUserService currentUser) {
+    public DashboardService(TransactionRepository transactions, CurrentUserService currentUser, Clock clock) {
         this.transactions = transactions;
         this.currentUser = currentUser;
+        this.clock = clock;
     }
 
     public DashboardResponse get(LocalDate from, LocalDate to) {
-        LocalDate resolvedTo = to == null ? LocalDate.now() : to;
+        LocalDate resolvedTo = to == null ? LocalDate.now(clock) : to;
         LocalDate resolvedFrom = from == null ? resolvedTo.withDayOfMonth(1) : from;
         if (resolvedFrom.isAfter(resolvedTo)) {
             throw new IllegalArgumentException("from must not be after to");
@@ -50,7 +53,7 @@ public class DashboardService {
                 income.subtract(expenses),
                 values.size(),
                 categoryExpenses(values, expenses),
-                dailyCashFlow(values),
+                dailyCashFlow(values, resolvedFrom, resolvedTo),
                 values.stream().limit(5).map(this::map).toList());
     }
 
@@ -85,7 +88,8 @@ public class DashboardService {
         return amount.multiply(BigDecimal.valueOf(100)).divide(total, 2, RoundingMode.HALF_UP);
     }
 
-    private List<DashboardResponse.DailyCashFlow> dailyCashFlow(List<Transaction> values) {
+    private List<DashboardResponse.DailyCashFlow> dailyCashFlow(
+            List<Transaction> values, LocalDate from, LocalDate to) {
         Map<LocalDate, BigDecimal[]> totals = new TreeMap<>();
         values.forEach(value -> {
             BigDecimal[] day = totals.computeIfAbsent(value.getDate(), ignored -> new BigDecimal[]{ZERO, ZERO});
@@ -94,8 +98,11 @@ public class DashboardService {
         });
 
         List<DashboardResponse.DailyCashFlow> result = new ArrayList<>();
-        totals.forEach((date, day) -> result.add(
-                new DashboardResponse.DailyCashFlow(date, day[0], day[1], day[0].subtract(day[1]))));
+        from.datesUntil(to.plusDays(1)).forEach(date -> {
+            BigDecimal[] day = totals.getOrDefault(date, new BigDecimal[]{ZERO, ZERO});
+            result.add(new DashboardResponse.DailyCashFlow(
+                    date, day[0], day[1], day[0].subtract(day[1])));
+        });
         return result;
     }
 
