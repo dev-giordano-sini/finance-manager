@@ -1,6 +1,6 @@
-# Finance Manager API
+# Finance Manager
 
-Production-oriented personal finance REST API built with Java 21, Spring Boot 3, PostgreSQL, Flyway, Spring Security, and JWT.
+Applicazione full-stack per la gestione delle finanze personali. Il backend espone una REST API in Java 21/Spring Boot, mentre il frontend separato in `frontend/` usa Vue 3, Vite e TypeScript.
 
 ## Features
 
@@ -19,6 +19,7 @@ Production-oriented personal finance REST API built with Java 21, Spring Boot 3,
 - Java 21
 - Maven 3.9+
 - PostgreSQL 16+, or Docker with Docker Compose
+- Node.js 20+ e npm (per il frontend)
 
 ## Run with Docker Compose
 
@@ -30,6 +31,8 @@ docker compose up --build
 ```
 
 The API is available at `http://localhost:8080`; Swagger UI is at `http://localhost:8080/swagger-ui.html`.
+
+Il container Compose avvia il backend e il database. Per avviare anche il frontend, segui la sezione seguente.
 
 ## Run locally
 
@@ -44,6 +47,27 @@ mvn spring-boot:run
 ```
 
 Flyway applies migrations automatically. The application never uses Hibernate to create or modify the schema.
+
+## Avviare il frontend
+
+Con il backend in ascolto su `http://localhost:8080`, apri un secondo terminale:
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Apri `http://localhost:5173`. In sviluppo Vite inoltra le richieste `/api` al backend, quindi il browser comunica esclusivamente con le REST API esistenti. Per usare un endpoint differente, copia `.env.example` in `.env` e imposta `VITE_API_URL` (ad esempio `https://api.example.com/api/v1`).
+
+Per creare la build di produzione:
+
+```bash
+cd frontend
+npm run build
+```
+
+Gli asset statici vengono generati in `frontend/dist/`. Il frontend è un'applicazione indipendente e non viene incorporato nel jar Spring Boot.
 
 ## Authentication
 
@@ -82,6 +106,14 @@ The full interactive contract is exposed by Swagger UI and the OpenAPI document 
 
 ```bash
 mvn clean verify
+```
+
+Controllo TypeScript e build del frontend:
+
+```bash
+cd frontend
+npm run type-check
+npm run build
 ```
 
 ## Configuration

@@ -1,11 +1,8 @@
 package it.financemanager.user;
 
 import it.financemanager.common.BaseEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Table;
+import it.financemanager.role.Role;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "users")
@@ -16,9 +13,7 @@ public class User extends BaseEntity {
     private String password;
     @Column(nullable = false, length = 100)
     private String name;
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 20)
-    private Role role;
+    @OneToOne(fetch = FetchType.LAZY, optional = false) @JoinColumn(name = "role_id", nullable = false) private Role role;
 
     protected User() { }
     public User(String email, String password, String name, Role role) {

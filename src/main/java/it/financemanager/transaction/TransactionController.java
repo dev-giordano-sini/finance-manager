@@ -2,6 +2,7 @@ package it.financemanager.transaction;
 
 import jakarta.validation.Valid;
 import org.springframework.data.domain.*;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
