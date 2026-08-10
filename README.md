@@ -6,7 +6,6 @@ Production-oriented personal finance REST API built with Java 21, Spring Boot 3,
 
 - Register and login with BCrypt password hashing and stateless signed JWT access tokens (no refresh tokens)
 - User-isolated CRUD for categories, transactions, and budgets
-- Dashboard summaries with cash flow, category spending, and recent transactions
 - Bean Validation at the API boundary and database constraints for defense in depth
 - RFC 9457 `ProblemDetail` error responses
 - Flyway-owned PostgreSQL schema; Hibernate runs in validation-only mode
@@ -70,11 +69,8 @@ curl http://localhost:8080/api/v1/categories \
 | Categories | `GET, POST /api/v1/categories`; `GET, PUT, DELETE /api/v1/categories/{id}` |
 | Transactions | `GET, POST /api/v1/transactions`; `GET, PUT, DELETE /api/v1/transactions/{id}` |
 | Budgets | `GET, POST /api/v1/budgets`; `GET, PUT, DELETE /api/v1/budgets/{id}` |
-| Dashboard | `GET /api/v1/dashboard` |
 
 Transactions support `from`, `to`, `page`, `size`, and `sort` query parameters. Page size is capped at 100. Monetary amounts are positive decimals with two fractional digits. Dates use ISO-8601 (`YYYY-MM-DD`). A user can only reference and access their own data; inaccessible IDs deliberately return 404.
-
-The dashboard accepts optional ISO-8601 `from` and `to` parameters and defaults to the current month through today. It returns income, expenses, balance, expense totals by category, daily cash flow, and the five most recent transactions for the selected period.
 
 The full interactive contract is exposed by Swagger UI and the OpenAPI document at `/v3/api-docs`.
 
