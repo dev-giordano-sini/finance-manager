@@ -3,7 +3,6 @@ import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useAuthStore } from '../stores/auth';
 import { useApiError } from '../composables/useApiError';
-import { login } from "../api/authApi";
 const email = ref('');
 const password = ref('');
 const loading = ref(false);
@@ -14,21 +13,22 @@ const { error, capture } = useApiError();
 
 
 async function submit() {
-    loading.value = true; error.value = '';
+    loading.value = true;
+    error.value = "";
+
     try {
-        const response = await login({
-            email: email.value,
-            password: password.value
-        });
 
-        localStorage.setItem("token", response.data.accessToken);
+        await auth.login(
+            email.value,
+            password.value
+        );
 
-        await router.push('/dashboad')
-    }
-    catch (e) {
-        capture(e)
+        await router.replace("/dashboard");
+
+    } catch (e) {
+        capture(e);
     } finally {
-        loading.value = false
+        loading.value = false;
     }
 }
 </script>

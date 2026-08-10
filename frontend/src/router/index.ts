@@ -7,7 +7,7 @@ const router = createRouter({ history: createWebHistory(), routes: [
   { path: '/login', name: 'login', component: LoginView, meta: { guest: true } },
   { path: '/register', name: 'register', component: RegisterView, meta: { guest: true } },
   { path: '/', component: AppLayout, meta: { auth: true }, children: [
-    { path: '', name: 'dashboard', component: () => import('../views/DashboardView.vue') },
+    { path: '/dashboard', name: 'dashboard', meta: { auth: true }, component: () => import('../views/DashboardView.vue') },
     { path: 'transactions', name: 'transactions', component: () => import('../views/TransactionsView.vue') },
     { path: 'categories', name: 'categories', component: () => import('../views/CategoriesView.vue') },
     { path: 'budgets', name: 'budgets', component: () => import('../views/BudgetsView.vue') },
