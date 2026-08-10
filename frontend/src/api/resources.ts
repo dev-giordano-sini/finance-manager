@@ -1,5 +1,5 @@
 import { api } from './client'
-import type { AuthResponse, Budget, BudgetInput, Category, CategoryInput, Page, Transaction, TransactionInput } from '../types'
+import type { AuthResponse, Budget, BudgetInput, Category, CategoryInput, Dashboard, Page, Transaction, TransactionInput } from '../types'
 
 export const authApi = {
   login: (email: string, password: string) => api.post<AuthResponse>('/auth/login', { email, password }),
@@ -16,4 +16,7 @@ export const transactionsApi = {
 export const budgetsApi = {
   list: () => api.get<Budget[]>('/budgets'), create: (data: BudgetInput) => api.post<Budget>('/budgets', data),
   update: (id: number, data: BudgetInput) => api.put<Budget>(`/budgets/${id}`, data), delete: (id: number) => api.delete(`/budgets/${id}`),
+}
+export const dashboardApi = {
+  get: (params: { from?: string; to?: string } = {}) => api.get<Dashboard>('/dashboard', { params }),
 }
