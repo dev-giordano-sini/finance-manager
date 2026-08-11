@@ -3,8 +3,8 @@ import it.financemanager.category.*; import it.financemanager.common.exception.R
 import org.springframework.stereotype.Service; import org.springframework.transaction.annotation.Transactional; import java.util.List;
 @Service @Transactional(readOnly=true)
 public class BudgetService {
- private final BudgetRepository repository; private final CategoryService categories; private final CurrentUserService currentUser;
- public BudgetService(BudgetRepository repository,CategoryService categories,CurrentUserService currentUser){this.repository=repository;this.categories=categories;this.currentUser=currentUser;}
+ private final BudgetRepositoryPort repository; private final CategoryService categories; private final CurrentUserService currentUser;
+ public BudgetService(BudgetRepositoryPort repository,CategoryService categories,CurrentUserService currentUser){this.repository=repository;this.categories=categories;this.currentUser=currentUser;}
  public List<BudgetResponse> list(){return repository.findAllByUserIdOrderByStartDateDesc(currentUser.get().getId()).stream().map(this::map).toList();}
  public BudgetResponse get(Long id){return map(find(id,currentUser.get().getId()));}
  @Transactional public BudgetResponse create(BudgetRequest request){validate(request);User user=currentUser.get();Category category=categories.find(request.categoryId(),user.getId());return map(repository.save(new Budget(user,category,request.amount(),request.startDate(),request.endDate())));}

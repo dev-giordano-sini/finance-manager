@@ -13,10 +13,10 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true)
 public class CategoryService {
-    private final CategoryRepository repository;
+    private final CategoryRepositoryPort repository;
     private final CurrentUserService currentUser;
 
-    public CategoryService(CategoryRepository repository, CurrentUserService currentUser) {
+    public CategoryService(CategoryRepositoryPort repository, CurrentUserService currentUser) {
         this.repository = repository;
         this.currentUser = currentUser;
     }

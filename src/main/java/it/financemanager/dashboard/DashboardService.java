@@ -1,7 +1,7 @@
 package it.financemanager.dashboard;
 
 import it.financemanager.transaction.Transaction;
-import it.financemanager.transaction.TransactionRepository;
+import it.financemanager.transaction.TransactionRepositoryPort;
 import it.financemanager.transaction.TransactionResponse;
 import it.financemanager.transaction.TransactionType;
 import it.financemanager.user.CurrentUserService;
@@ -23,11 +23,11 @@ import java.util.TreeMap;
 public class DashboardService {
     private static final BigDecimal ZERO = new BigDecimal("0.00");
 
-    private final TransactionRepository transactions;
+    private final TransactionRepositoryPort transactions;
     private final CurrentUserService currentUser;
     private final Clock clock;
 
-    public DashboardService(TransactionRepository transactions, CurrentUserService currentUser, Clock clock) {
+    public DashboardService(TransactionRepositoryPort transactions, CurrentUserService currentUser, Clock clock) {
         this.transactions = transactions;
         this.currentUser = currentUser;
         this.clock = clock;

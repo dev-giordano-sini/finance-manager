@@ -12,8 +12,8 @@ import java.time.LocalDate;
 
 @Service @Transactional(readOnly = true)
 public class TransactionService {
-    private final TransactionRepository repository; private final CategoryService categories; private final CurrentUserService currentUser;
-    public TransactionService(TransactionRepository repository, CategoryService categories, CurrentUserService currentUser) { this.repository=repository; this.categories=categories; this.currentUser=currentUser; }
+    private final TransactionRepositoryPort repository; private final CategoryService categories; private final CurrentUserService currentUser;
+    public TransactionService(TransactionRepositoryPort repository, CategoryService categories, CurrentUserService currentUser) { this.repository=repository; this.categories=categories; this.currentUser=currentUser; }
     public Page<TransactionResponse> list(LocalDate from, LocalDate to, Pageable pageable) {
         if (from.isAfter(to)) throw new IllegalArgumentException("from must not be after to");
         return repository.findAllByUserIdAndDateBetween(currentUser.get().getId(), from, to, pageable).map(this::map);
