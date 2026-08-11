@@ -1,5 +1,8 @@
-package it.financemanager.category;
+package it.financemanager.infrastructure.web;
 
+import it.financemanager.category.CategoryRequest;
+import it.financemanager.category.CategoryResponse;
+import it.financemanager.category.CategoryService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

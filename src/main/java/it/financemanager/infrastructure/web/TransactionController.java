@@ -1,5 +1,8 @@
-package it.financemanager.transaction;
+package it.financemanager.infrastructure.web;
 
+import it.financemanager.transaction.TransactionRequest;
+import it.financemanager.transaction.TransactionResponse;
+import it.financemanager.transaction.TransactionService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.*;
 import org.springframework.data.web.PageableDefault;

@@ -1,5 +1,9 @@
-package it.financemanager.auth;
+package it.financemanager.infrastructure.web;
 
+import it.financemanager.auth.AuthResponse;
+import it.financemanager.auth.AuthService;
+import it.financemanager.auth.LoginRequest;
+import it.financemanager.auth.RegisterRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;

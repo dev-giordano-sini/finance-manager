@@ -1,5 +1,7 @@
-package it.financemanager.user;
+package it.financemanager.infrastructure.web;
 
+import it.financemanager.user.CurrentUserResponse;
+import it.financemanager.user.CurrentUserService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
