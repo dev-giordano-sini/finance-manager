@@ -1,7 +1,7 @@
 package it.financemanager.auth;
 
 import it.financemanager.common.exception.ConflictException;
-import it.financemanager.common.security.JwtService;
+import it.financemanager.infrastructure.security.JwtService;
 import it.financemanager.role.BaseRole;
 import it.financemanager.role.Role;
 import it.financemanager.role.RoleService;

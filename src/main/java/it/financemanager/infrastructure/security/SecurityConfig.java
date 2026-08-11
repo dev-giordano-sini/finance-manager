@@ -1,10 +1,6 @@
-package it.financemanager.common.security;
+package it.financemanager.infrastructure.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.financemanager.role.BaseRole;
-import it.financemanager.role.Role;
-import it.financemanager.role.RoleRepository;
-import it.financemanager.user.UserRepository;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -19,9 +15,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -38,13 +31,6 @@ import java.util.List;
 @EnableMethodSecurity
 @EnableConfigurationProperties(JwtProperties.class)
 public class SecurityConfig {
-    @Bean
-    UserDetailsService userDetailsService(UserRepository repository, RoleRepository roleRepository) {
-        Role userRole = roleRepository.findByCode(BaseRole.ROLE_USER.getRole()).orElse(new Role(BaseRole.ROLE_USER.getRole(), ""));
-        return email -> repository.findByEmailIgnoreCase(email)
-                .map(user -> User.withUsername(user.getEmail()).password(user.getPassword()).roles(userRole.getCode()).build())
-                .orElseThrow(() -> new UsernameNotFoundException("Invalid credentials"));
-    }
     @Bean PasswordEncoder passwordEncoder() { return new BCryptPasswordEncoder(); }
     @Bean
     AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
