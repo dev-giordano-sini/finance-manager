@@ -13,3 +13,8 @@ export interface Dashboard {
   from: string; to: string; totalIncome: number; totalExpenses: number; balance: number; transactionCount: number
   expensesByCategory: CategoryExpense[]; dailyCashFlow: DailyCashFlow[]; recentTransactions: Transaction[]
 }
+export interface CurrentUser {
+  name: string;
+  surname: string;
+  email: string;
+}

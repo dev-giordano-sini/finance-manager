@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useAuthStore } from '../stores/auth';
 import { useApiError } from '../composables/useApiError';
+import logo from "../assets/spendly_logo.png";
 const email = ref('');
 const password = ref('');
 const loading = ref(false);
@@ -35,14 +36,16 @@ async function submit() {
 <template>
     <main class="auth-page">
         <section class="auth-intro">
-            <div class="brand light"><span class="brand-mark">F</span><strong>Finora</strong></div>
+            <div class="brand light"><span class="brand-avatar">
+                <img :src="logo" alt="Spendly" class="brand-logo" />
+            </span><strong>Spendly</strong></div>
             <div><span class="eyebrow">FINANZE, SEMPLICI</span>
                 <h1>Il tuo denaro.<br>Più <em>chiaro</em> che mai.</h1>
                 <p>Una vista completa delle tue finanze per decidere meglio, ogni giorno.</p>
-            </div><small>© 2026 Finora</small>
+            </div><small>© 2026 Spendly</small>
         </section>
         <section class="auth-form">
-            <form @submit.prevent="submit"><span class="mobile-brand">Finora</span>
+            <form @submit.prevent="submit"><span class="mobile-brand">Spendly</span>
                 <h2>Bentornato</h2>
                 <p>Accedi per continuare verso i tuoi obiettivi.</p>
                 <div v-if="route.query.expired" class="notice">Sessione scaduta. Accedi nuovamente.</div>

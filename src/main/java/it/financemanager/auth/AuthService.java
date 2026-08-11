@@ -2,6 +2,7 @@ package it.financemanager.auth;
 
 import it.financemanager.common.exception.ConflictException;
 import it.financemanager.common.security.JwtService;
+import it.financemanager.role.BaseRole;
 import it.financemanager.role.Role;
 import it.financemanager.role.RoleService;
 import it.financemanager.user.User;
@@ -31,7 +32,7 @@ public class AuthService {
         String email = request.email().trim().toLowerCase(Locale.ROOT);
         if (users.existsByEmailIgnoreCase(email)) throw new ConflictException("An account with this email already exists");
         try {
-            Role user = roleService.getUserRole(request.roleCode().trim());
+            Role user = roleService.getUserRole(BaseRole.ROLE_USER.getRole());
             users.saveAndFlush(new User(email, passwordEncoder.encode(request.password()), request.name().trim(), request.surname(), user));
         } catch (DataIntegrityViolationException ex) {
             throw new ConflictException("An account with this email already exists");
