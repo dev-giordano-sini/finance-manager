@@ -76,7 +76,7 @@ Register:
 ```bash
 curl -X POST http://localhost:8080/api/v1/auth/register \
   -H 'Content-Type: application/json' \
-  -d '{"email":"user@example.com","password":"strong-password","name":"Example User"}'
+  -d '{"email":"user@example.com","password":"strong-password","name":"Example","surname":"User"}'
 ```
 
 Login uses `POST /api/v1/auth/login` with `email` and `password`. Both endpoints return an `accessToken`. Supply it to protected endpoints:
@@ -108,6 +108,12 @@ The full interactive contract is exposed by Swagger UI and the OpenAPI document 
 mvn clean verify
 ```
 
+Generate the backend package and API reference in `target/reports/apidocs/`:
+
+```bash
+mvn javadoc:javadoc
+```
+
 Controllo TypeScript e build del frontend:
 
 ```bash
@@ -131,4 +137,4 @@ Always override database credentials and `JWT_SECRET` in non-development environ
 
 ## Architecture
 
-Code is package-by-feature under `it.financemanager`: `auth`, `user`, `category`, `transaction`, and `budget`. Cross-cutting configuration, security, persistence base types, and errors live under `common`. DTOs are immutable Java records and mapping is explicit. Entities use `Long` identity IDs, optimistic versions, and immutable creation/modification audit metadata.
+Code is package-by-feature under `it.financemanager`: `auth`, `user`, `role`, `category`, `transaction`, `budget`, and `dashboard`. Cross-cutting configuration, security, persistence base types, and errors live under `common`. DTOs are immutable Java records and mapping is explicit. Entities use `Long` identity IDs, optimistic versions, and immutable creation/modification audit metadata. Package-level Javadoc is maintained in each package's `package-info.java`.

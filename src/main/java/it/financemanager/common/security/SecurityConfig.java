@@ -1,9 +1,6 @@
 package it.financemanager.common.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.financemanager.role.BaseRole;
-import it.financemanager.role.Role;
-import it.financemanager.role.RoleRepository;
 import it.financemanager.user.UserRepository;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -39,10 +36,9 @@ import java.util.List;
 @EnableConfigurationProperties(JwtProperties.class)
 public class SecurityConfig {
     @Bean
-    UserDetailsService userDetailsService(UserRepository repository, RoleRepository roleRepository) {
-        Role userRole = roleRepository.findByCode(BaseRole.ROLE_USER.getRole()).orElse(new Role(BaseRole.ROLE_USER.getRole(), ""));
+    UserDetailsService userDetailsService(UserRepository repository) {
         return email -> repository.findByEmailIgnoreCase(email)
-                .map(user -> User.withUsername(user.getEmail()).password(user.getPassword()).roles(userRole.getCode()).build())
+                .map(user -> User.withUsername(user.getEmail()).password(user.getPassword()).roles(user.getRole().getCode()).build())
                 .orElseThrow(() -> new UsernameNotFoundException("Invalid credentials"));
     }
     @Bean PasswordEncoder passwordEncoder() { return new BCryptPasswordEncoder(); }
@@ -59,8 +55,7 @@ public class SecurityConfig {
     }
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthenticationFilter filter, ObjectMapper mapper) throws Exception {
-        http.csrf(AbstractHttpConfigurer::disable).cors(cors -> {})
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth

@@ -2,9 +2,9 @@ package it.financemanager.auth;
 
 import it.financemanager.common.exception.ConflictException;
 import it.financemanager.common.security.JwtService;
-import it.financemanager.role.BaseRole;
+import it.financemanager.role.RoleCode;
 import it.financemanager.role.Role;
-import it.financemanager.role.RoleService;
+import it.financemanager.role.RoleRepository;
 import it.financemanager.user.User;
 import it.financemanager.user.UserRepository;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -22,18 +22,19 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwt;
-    private final RoleService roleService;
-    public AuthService(UserRepository users, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JwtService jwt, RoleService roleService) {
+    private final RoleRepository roles;
+    public AuthService(UserRepository users, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JwtService jwt, RoleRepository roles) {
         this.users = users; this.passwordEncoder = passwordEncoder; this.authenticationManager = authenticationManager; this.jwt = jwt;
-        this.roleService = roleService;
+        this.roles = roles;
     }
     @Transactional
     public AuthResponse register(RegisterRequest request) {
         String email = request.email().trim().toLowerCase(Locale.ROOT);
         if (users.existsByEmailIgnoreCase(email)) throw new ConflictException("An account with this email already exists");
         try {
-            Role user = roleService.getUserRole(BaseRole.ROLE_USER.getRole());
-            users.saveAndFlush(new User(email, passwordEncoder.encode(request.password()), request.name().trim(), request.surname(), user));
+            Role userRole = roles.findByCode(RoleCode.USER.name())
+                    .orElseThrow(() -> new IllegalStateException("Required USER role is not configured"));
+            users.saveAndFlush(new User(email, passwordEncoder.encode(request.password()), request.name().trim(), request.surname().trim(), userRole));
         } catch (DataIntegrityViolationException ex) {
             throw new ConflictException("An account with this email already exists");
         }
