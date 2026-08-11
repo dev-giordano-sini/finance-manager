@@ -2,7 +2,7 @@ package it.financemanager.category;
 
 import it.financemanager.common.exception.ConflictException;
 import it.financemanager.common.exception.ResourceNotFoundException;
-import it.financemanager.user.CurrentUserService;
+import it.financemanager.user.CurrentUserUseCase;
 import it.financemanager.user.User;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -12,11 +12,11 @@ import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
-public class CategoryService {
+public class CategoryUseCaseImpl implements CategoryUseCase {
     private final CategoryRepository repository;
-    private final CurrentUserService currentUser;
+    private final CurrentUserUseCase currentUser;
 
-    public CategoryService(CategoryRepository repository, CurrentUserService currentUser) {
+    public CategoryUseCaseImpl(CategoryRepository repository, CurrentUserUseCase currentUser) {
         this.repository = repository;
         this.currentUser = currentUser;
     }

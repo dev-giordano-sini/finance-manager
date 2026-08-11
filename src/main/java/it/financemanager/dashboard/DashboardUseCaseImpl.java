@@ -4,7 +4,7 @@ import it.financemanager.transaction.Transaction;
 import it.financemanager.transaction.TransactionRepository;
 import it.financemanager.transaction.TransactionResponse;
 import it.financemanager.transaction.TransactionType;
-import it.financemanager.user.CurrentUserService;
+import it.financemanager.user.CurrentUserUseCase;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,14 +20,14 @@ import java.util.TreeMap;
 
 @Service
 @Transactional(readOnly = true)
-public class DashboardService {
+public class DashboardUseCaseImpl implements DashboardUseCase {
     private static final BigDecimal ZERO = new BigDecimal("0.00");
 
     private final TransactionRepository transactions;
-    private final CurrentUserService currentUser;
+    private final CurrentUserUseCase currentUser;
     private final Clock clock;
 
-    public DashboardService(TransactionRepository transactions, CurrentUserService currentUser, Clock clock) {
+    public DashboardUseCaseImpl(TransactionRepository transactions, CurrentUserUseCase currentUser, Clock clock) {
         this.transactions = transactions;
         this.currentUser = currentUser;
         this.clock = clock;

@@ -5,7 +5,7 @@ import it.financemanager.common.BaseEntity;
 import it.financemanager.transaction.Transaction;
 import it.financemanager.transaction.TransactionRepository;
 import it.financemanager.transaction.TransactionType;
-import it.financemanager.user.CurrentUserService;
+import it.financemanager.user.CurrentUserUseCase;
 import it.financemanager.user.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,15 +27,15 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class DashboardServiceTest {
+class DashboardUseCaseImplTest {
     private static final LocalDate TODAY = LocalDate.of(2026, 8, 10);
 
     @Mock
     private TransactionRepository transactions;
     @Mock
-    private CurrentUserService currentUser;
+    private CurrentUserUseCase currentUser;
 
-    private DashboardService service;
+    private DashboardUseCaseImpl service;
     private User user;
     private Category groceries;
     private Category home;
@@ -43,8 +43,8 @@ class DashboardServiceTest {
     @BeforeEach
     void setUp() {
         Clock clock = Clock.fixed(Instant.parse("2026-08-10T12:00:00Z"), ZoneOffset.UTC);
-        service = new DashboardService(transactions, currentUser, clock);
-        user = new User("user@example.com", "password", "User", null);
+        service = new DashboardUseCaseImpl(transactions, currentUser, clock);
+        user = new User("user@example.com", "password", "User", "Surname", null);
         groceries = new Category(user, "Spesa", "#FF0000");
         home = new Category(user, "Casa", "#00FF00");
         setId(user, 7L);

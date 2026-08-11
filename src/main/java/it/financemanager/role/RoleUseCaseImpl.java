@@ -5,10 +5,10 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Transactional
-public class RoleService {
+public class RoleUseCaseImpl implements RoleUseCase {
     private final RoleRepository roleRepository;
 
-    public RoleService(RoleRepository roleRepository) {
+    public RoleUseCaseImpl(RoleRepository roleRepository) {
         this.roleRepository = roleRepository;
     }
 
