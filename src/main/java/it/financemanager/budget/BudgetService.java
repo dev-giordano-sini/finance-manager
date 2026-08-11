@@ -2,7 +2,7 @@ package it.financemanager.budget;
 import it.financemanager.category.*; import it.financemanager.common.exception.ResourceNotFoundException; import it.financemanager.user.*;
 import org.springframework.stereotype.Service; import org.springframework.transaction.annotation.Transactional; import java.util.List;
 @Service @Transactional(readOnly=true)
-public class BudgetService {
+public class BudgetService implements BudgetUseCase {
  private final BudgetRepository repository; private final CategoryService categories; private final CurrentUserService currentUser;
  public BudgetService(BudgetRepository repository,CategoryService categories,CurrentUserService currentUser){this.repository=repository;this.categories=categories;this.currentUser=currentUser;}
  public List<BudgetResponse> list(){return repository.findAllByUserIdOrderByStartDateDesc(currentUser.get().getId()).stream().map(this::map).toList();}

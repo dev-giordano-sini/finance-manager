@@ -12,7 +12,7 @@ import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
-public class CategoryService {
+public class CategoryService implements CategoryUseCase {
     private final CategoryRepository repository;
     private final CurrentUserService currentUser;
 

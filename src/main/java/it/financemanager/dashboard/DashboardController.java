@@ -11,9 +11,9 @@ import java.time.LocalDate;
 @RestController
 @RequestMapping("/api/v1/dashboard")
 public class DashboardController {
-    private final DashboardService service;
+    private final DashboardUseCase service;
 
-    public DashboardController(DashboardService service) {
+    public DashboardController(DashboardUseCase service) {
         this.service = service;
     }
 

@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 
 @Service @Transactional(readOnly = true)
-public class TransactionService {
+public class TransactionService implements TransactionUseCase {
     private final TransactionRepository repository; private final CategoryService categories; private final CurrentUserService currentUser;
     public TransactionService(TransactionRepository repository, CategoryService categories, CurrentUserService currentUser) { this.repository=repository; this.categories=categories; this.currentUser=currentUser; }
     public Page<TransactionResponse> list(LocalDate from, LocalDate to, Pageable pageable) {

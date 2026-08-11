@@ -11,10 +11,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/auth")
 public class AuthController {
-    private final AuthService service;
-    public AuthController(AuthService service) { this.service = service; }
+    private final AuthenticateUserUseCase authenticateUser;
+    private final RegisterUserUseCase registerUser;
+
+    public AuthController(AuthenticateUserUseCase authenticateUser, RegisterUserUseCase registerUser) {
+        this.authenticateUser = authenticateUser;
+        this.registerUser = registerUser;
+    }
     @PostMapping("/register") @ResponseStatus(HttpStatus.CREATED)
-    AuthResponse register(@Valid @RequestBody RegisterRequest request) { return service.register(request); }
+    AuthResponse register(@Valid @RequestBody RegisterRequest request) { return registerUser.register(request); }
     @PostMapping("/login")
-    AuthResponse login(@Valid @RequestBody LoginRequest request) { return service.login(request); }
+    AuthResponse login(@Valid @RequestBody LoginRequest request) { return authenticateUser.login(request); }
 }

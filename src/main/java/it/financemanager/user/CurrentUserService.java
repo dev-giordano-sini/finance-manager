@@ -5,7 +5,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CurrentUserService {
+public class CurrentUserService implements CurrentUserUseCase {
     private final UserRepository repository;
     public CurrentUserService(UserRepository repository) { this.repository = repository; }
     public User get() {

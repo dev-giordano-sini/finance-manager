@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Locale;
 
 @Service
-public class AuthService {
+public class AuthService implements AuthenticateUserUseCase, RegisterUserUseCase {
     private final UserRepository users;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;

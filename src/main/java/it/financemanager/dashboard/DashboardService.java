@@ -20,7 +20,7 @@ import java.util.TreeMap;
 
 @Service
 @Transactional(readOnly = true)
-public class DashboardService {
+public class DashboardService implements DashboardUseCase {
     private static final BigDecimal ZERO = new BigDecimal("0.00");
 
     private final TransactionRepository transactions;
