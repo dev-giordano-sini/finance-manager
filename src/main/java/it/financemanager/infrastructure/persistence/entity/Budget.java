@@ -1,6 +1,5 @@
-package it.financemanager.budget;
+package it.financemanager.infrastructure.persistence.entity;
 
-import it.financemanager.category.Category; import it.financemanager.common.BaseEntity; import it.financemanager.user.User;
 import jakarta.persistence.*; import java.math.BigDecimal; import java.time.LocalDate;
 @Entity @Table(name="budgets", indexes=@Index(name="idx_budgets_user_period",columnList="user_id,start_date,end_date"))
 public class Budget extends BaseEntity {

@@ -1,4 +1,4 @@
-package it.financemanager.common;
+package it.financemanager.infrastructure.persistence.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;

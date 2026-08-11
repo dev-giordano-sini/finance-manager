@@ -2,7 +2,7 @@ package it.financemanager.common.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.financemanager.role.BaseRole;
-import it.financemanager.role.Role;
+import it.financemanager.infrastructure.persistence.entity.Role;
 import it.financemanager.role.RoleRepository;
 import it.financemanager.user.UserRepository;
 import jakarta.servlet.http.HttpServletResponse;

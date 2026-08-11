@@ -1,5 +1,7 @@
 package it.financemanager.user;
 
+import it.financemanager.infrastructure.persistence.entity.User;
+
 import it.financemanager.common.exception.ResourceNotFoundException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;

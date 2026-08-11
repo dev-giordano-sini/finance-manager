@@ -1,7 +1,5 @@
-package it.financemanager.user;
+package it.financemanager.infrastructure.persistence.entity;
 
-import it.financemanager.common.BaseEntity;
-import it.financemanager.role.Role;
 import jakarta.persistence.*;
 
 @Entity

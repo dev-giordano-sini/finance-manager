@@ -1,5 +1,7 @@
 package it.financemanager.user;
 
+import it.financemanager.infrastructure.persistence.entity.User;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 

@@ -1,6 +1,6 @@
 package it.financemanager.dashboard;
 
-import it.financemanager.transaction.Transaction;
+import it.financemanager.infrastructure.persistence.entity.Transaction;
 import it.financemanager.transaction.TransactionRepository;
 import it.financemanager.transaction.TransactionResponse;
 import it.financemanager.transaction.TransactionType;

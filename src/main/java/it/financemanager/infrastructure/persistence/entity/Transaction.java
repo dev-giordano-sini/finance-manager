@@ -1,8 +1,6 @@
-package it.financemanager.transaction;
+package it.financemanager.infrastructure.persistence.entity;
 
-import it.financemanager.category.Category;
-import it.financemanager.common.BaseEntity;
-import it.financemanager.user.User;
+import it.financemanager.transaction.TransactionType;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;

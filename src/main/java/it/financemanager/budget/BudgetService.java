@@ -1,4 +1,8 @@
 package it.financemanager.budget;
+
+import it.financemanager.infrastructure.persistence.entity.Budget;
+import it.financemanager.infrastructure.persistence.entity.Category;
+import it.financemanager.infrastructure.persistence.entity.User;
 import it.financemanager.category.*; import it.financemanager.common.exception.ResourceNotFoundException; import it.financemanager.user.*;
 import org.springframework.stereotype.Service; import org.springframework.transaction.annotation.Transactional; import java.util.List;
 @Service @Transactional(readOnly=true)

@@ -1,7 +1,5 @@
-package it.financemanager.category;
+package it.financemanager.infrastructure.persistence.entity;
 
-import it.financemanager.common.BaseEntity;
-import it.financemanager.user.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

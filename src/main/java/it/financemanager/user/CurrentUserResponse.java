@@ -1,5 +1,7 @@
 package it.financemanager.user;
 
+import it.financemanager.infrastructure.persistence.entity.User;
+
 public record CurrentUserResponse(
         String name,
         String surname,

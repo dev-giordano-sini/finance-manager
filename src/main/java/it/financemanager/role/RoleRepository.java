@@ -1,5 +1,7 @@
 package it.financemanager.role;
 
+import it.financemanager.infrastructure.persistence.entity.Role;
+
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

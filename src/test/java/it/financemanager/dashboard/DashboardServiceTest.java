@@ -1,12 +1,12 @@
 package it.financemanager.dashboard;
 
-import it.financemanager.category.Category;
-import it.financemanager.common.BaseEntity;
-import it.financemanager.transaction.Transaction;
+import it.financemanager.infrastructure.persistence.entity.Category;
+import it.financemanager.infrastructure.persistence.entity.BaseEntity;
+import it.financemanager.infrastructure.persistence.entity.Transaction;
 import it.financemanager.transaction.TransactionRepository;
 import it.financemanager.transaction.TransactionType;
 import it.financemanager.user.CurrentUserService;
-import it.financemanager.user.User;
+import it.financemanager.infrastructure.persistence.entity.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

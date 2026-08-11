@@ -1,5 +1,7 @@
 package it.financemanager.role;
 
+import it.financemanager.infrastructure.persistence.entity.Role;
+
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 

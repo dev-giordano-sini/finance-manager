@@ -1,9 +1,11 @@
 package it.financemanager.category;
 
+import it.financemanager.infrastructure.persistence.entity.Category;
+
 import it.financemanager.common.exception.ConflictException;
 import it.financemanager.common.exception.ResourceNotFoundException;
 import it.financemanager.user.CurrentUserService;
-import it.financemanager.user.User;
+import it.financemanager.infrastructure.persistence.entity.User;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
