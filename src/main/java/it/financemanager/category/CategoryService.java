@@ -2,6 +2,7 @@ package it.financemanager.category;
 
 import it.financemanager.common.exception.ConflictException;
 import it.financemanager.common.exception.ResourceNotFoundException;
+import it.financemanager.category.port.out.CategoryOutputPort;
 import it.financemanager.user.CurrentUserService;
 import it.financemanager.user.User;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -13,10 +14,10 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true)
 public class CategoryService {
-    private final CategoryRepository repository;
+    private final CategoryOutputPort repository;
     private final CurrentUserService currentUser;
 
-    public CategoryService(CategoryRepository repository, CurrentUserService currentUser) {
+    public CategoryService(CategoryOutputPort repository, CurrentUserService currentUser) {
         this.repository = repository;
         this.currentUser = currentUser;
     }
@@ -58,8 +59,7 @@ public class CategoryService {
     public void delete(Long id) {
         Category category = find(id, currentUser.get().getId());
         try {
-            repository.delete(category);
-            repository.flush();
+            repository.deleteAndFlush(category);
         } catch (DataIntegrityViolationException ex) {
             throw new ConflictException("Category is in use and cannot be deleted");
         }

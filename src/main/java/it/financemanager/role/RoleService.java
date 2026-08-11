@@ -2,13 +2,14 @@ package it.financemanager.role;
 
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+import it.financemanager.role.port.out.RoleOutputPort;
 
 @Service
 @Transactional
 public class RoleService {
-    private final RoleRepository roleRepository;
+    private final RoleOutputPort roleRepository;
 
-    public RoleService(RoleRepository roleRepository) {
+    public RoleService(RoleOutputPort roleRepository) {
         this.roleRepository = roleRepository;
     }
 
