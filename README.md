@@ -143,3 +143,18 @@ The backend follows a ports-and-adapters (hexagonal) architecture:
 - `infrastructure/config` is the composition root that wires port implementations to use cases.
 
 Dependencies point inward: infrastructure depends on application and domain, while domain and application do not depend on infrastructure or Spring.
+
+## Production profile
+
+Run deployments with `SPRING_PROFILES_ACTIVE=prod`. The production profile requires database credentials and
+`JWT_SECRET`, enables graceful shutdown and response compression, bounds the Hikari connection pool, suppresses
+error details, and disables OpenAPI by default. Swagger can be enabled explicitly with `OPENAPI_ENABLED=true`.
+
+The application exposes Kubernetes-compatible liveness and readiness probes at
+`/actuator/health/liveness` and `/actuator/health/readiness`. Only health information is public; business endpoints
+remain protected by JWT authentication.
+
+Application services remain framework-independent while an infrastructure AOP advisor opens one database transaction
+around each complete use-case invocation. Persistence adapters therefore participate in the same unit of work instead
+of defining fragmented adapter-level transactions. Spring Security loads credentials through the application-owned
+`UserPort`; it does not access Spring Data repositories directly.

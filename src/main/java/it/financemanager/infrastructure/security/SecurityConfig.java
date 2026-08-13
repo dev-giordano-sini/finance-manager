@@ -1,6 +1,6 @@
 package it.financemanager.infrastructure.security;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.financemanager.infrastructure.persistence.repository.UserJpaRepository;
+import it.financemanager.application.port.out.UserPort;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.*;
 import org.springframework.http.*;
@@ -15,10 +15,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableConfigurationProperties(JwtProperties.class)
 public class SecurityConfig {
     @Bean
-    UserDetailsService userDetailsService(UserJpaRepository r) {
+    UserDetailsService userDetailsService(UserPort users) {
         return email
-            -> r.findByEmailIgnoreCase(email)
-                   .map(u -> User.withUsername(u.email).password(u.password).roles(u.role.code).build())
+            -> users.findByEmail(email)
+                   .map(u -> User.withUsername(u.email()).password(u.passwordHash()).roles(u.role()).build())
                    .orElseThrow(() -> new UsernameNotFoundException("Invalid credentials"));
     }
     @Bean
@@ -35,13 +35,21 @@ public class SecurityConfig {
                     .permitAll()
                     .anyRequest()
                     .authenticated())
-            .exceptionHandling(x -> x.authenticationEntryPoint((q, s, e) -> {
-                s.setStatus(401);
-                s.setContentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE);
-                m.writeValue(s.getOutputStream(),
-                    ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED, "Authentication is required"));
-            }))
+            .exceptionHandling(x
+                -> x.authenticationEntryPoint(
+                        (request, response, exception)
+                            -> writeProblem(response, m, HttpStatus.UNAUTHORIZED, "Authentication is required"))
+                    .accessDeniedHandler(
+                        (request, response,
+                            exception) -> writeProblem(response, m, HttpStatus.FORBIDDEN, "Access is denied")))
             .addFilterBefore(f, UsernamePasswordAuthenticationFilter.class);
         return h.build();
+    }
+
+    private static void writeProblem(jakarta.servlet.http.HttpServletResponse response, ObjectMapper mapper,
+        HttpStatus status, String detail) throws java.io.IOException {
+        response.setStatus(status.value());
+        response.setContentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE);
+        mapper.writeValue(response.getOutputStream(), ProblemDetail.forStatusAndDetail(status, detail));
     }
 }

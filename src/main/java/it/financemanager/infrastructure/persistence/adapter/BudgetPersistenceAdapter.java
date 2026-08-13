@@ -7,9 +7,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.*;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 @Component
-@Transactional
 public class BudgetPersistenceAdapter implements BudgetPort {
     private final BudgetJpaRepository r;
     private final UserJpaRepository users;

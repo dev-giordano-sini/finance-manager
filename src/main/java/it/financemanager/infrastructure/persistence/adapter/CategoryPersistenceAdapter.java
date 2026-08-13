@@ -1,13 +1,13 @@
 package it.financemanager.infrastructure.persistence.adapter;
+import it.financemanager.application.exception.ConflictException;
 import it.financemanager.application.port.out.CategoryPort;
 import it.financemanager.domain.model.Category;
 import it.financemanager.infrastructure.persistence.entity.*;
 import it.financemanager.infrastructure.persistence.repository.*;
 import java.util.*;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 @Component
-@Transactional
 public class CategoryPersistenceAdapter implements CategoryPort {
     private final CategoryJpaRepository r;
     private final UserJpaRepository users;
@@ -25,16 +25,28 @@ public class CategoryPersistenceAdapter implements CategoryPort {
         return r.existsByUserIdAndNameIgnoreCase(uid, n);
     }
     public Category create(Long uid, String n, String c) {
-        return PersistenceMapper.category(r.save(new CategoryEntity(users.getReferenceById(uid), n, c)));
+        try {
+            return PersistenceMapper.category(r.saveAndFlush(new CategoryEntity(users.getReferenceById(uid), n, c)));
+        } catch (DataIntegrityViolationException exception) {
+            throw new ConflictException("Category name already exists");
+        }
     }
     public Category update(Category x, String n, String c) {
         CategoryEntity e = r.getReferenceById(x.id());
         e.name = n;
         e.color = c;
-        return PersistenceMapper.category(r.save(e));
+        try {
+            return PersistenceMapper.category(r.saveAndFlush(e));
+        } catch (DataIntegrityViolationException exception) {
+            throw new ConflictException("Category name already exists");
+        }
     }
     public void delete(Category x) {
-        r.deleteById(x.id());
-        r.flush();
+        try {
+            r.deleteById(x.id());
+            r.flush();
+        } catch (DataIntegrityViolationException exception) {
+            throw new ConflictException("Category is in use and cannot be deleted");
+        }
     }
 }

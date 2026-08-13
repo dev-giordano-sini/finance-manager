@@ -2,7 +2,6 @@ package it.financemanager.infrastructure.web;
 import it.financemanager.application.exception.*;
 import jakarta.servlet.http.HttpServletRequest;
 import java.net.URI;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.*;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
@@ -12,10 +11,9 @@ public class GlobalExceptionHandler {
     ProblemDetail notFound(Exception e, HttpServletRequest r) {
         return p(HttpStatus.NOT_FOUND, "Resource not found", e.getMessage(), r);
     }
-    @ExceptionHandler({ConflictException.class, DataIntegrityViolationException.class})
+    @ExceptionHandler(ConflictException.class)
     ProblemDetail conflict(Exception e, HttpServletRequest r) {
-        return p(HttpStatus.CONFLICT, "Conflict",
-            e instanceof ConflictException ? e.getMessage() : "Resource conflicts with existing data", r);
+        return p(HttpStatus.CONFLICT, "Conflict", e.getMessage(), r);
     }
     @ExceptionHandler(InvalidCredentialsException.class)
     ProblemDetail unauthorized(Exception e, HttpServletRequest r) {

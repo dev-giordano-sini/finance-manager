@@ -16,6 +16,7 @@ services:
   api:
     build: .
     environment:
+      SPRING_PROFILES_ACTIVE: prod
       DB_URL: jdbc:postgresql://db:5432/finance_manager
       DB_USERNAME: finance
       DB_PASSWORD: finance

@@ -9,9 +9,7 @@ import java.time.LocalDate;
 import java.util.*;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 @Component
-@Transactional
 public class TransactionPersistenceAdapter implements TransactionPort {
     private final TransactionJpaRepository r;
     private final UserJpaRepository users;
