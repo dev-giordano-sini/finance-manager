@@ -1,0 +1,3 @@
+package it.financemanager.application.port.in;
+import it.financemanager.application.port.out.TransactionPort.PageResult; import it.financemanager.domain.model.*; import java.math.BigDecimal; import java.time.LocalDate;
+public interface TransactionUseCase { PageResult<Transaction> list(LocalDate from,LocalDate to,int page,int size); Transaction get(Long id); Transaction create(Long categoryId,TransactionType type,BigDecimal amount,LocalDate date,String description); Transaction update(Long id,Long categoryId,TransactionType type,BigDecimal amount,LocalDate date,String description); void delete(Long id); }

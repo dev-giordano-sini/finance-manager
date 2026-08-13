@@ -76,7 +76,7 @@ Register:
 ```bash
 curl -X POST http://localhost:8080/api/v1/auth/register \
   -H 'Content-Type: application/json' \
-  -d '{"email":"user@example.com","password":"strong-password","name":"Example User"}'
+  -d '{"email":"user@example.com","password":"strong-password","name":"Example","surname":"User"}'
 ```
 
 Login uses `POST /api/v1/auth/login` with `email` and `password`. Both endpoints return an `accessToken`. Supply it to protected endpoints:
@@ -129,6 +129,17 @@ npm run build
 
 Always override database credentials and `JWT_SECRET` in non-development environments. Terminate TLS at an ingress/reverse proxy, restrict Swagger as appropriate, and back up the PostgreSQL volume.
 
-## Architecture
+## Backend architecture
 
-Code is package-by-feature under `it.financemanager`: `auth`, `user`, `category`, `transaction`, and `budget`. Cross-cutting configuration, security, persistence base types, and errors live under `common`. DTOs are immutable Java records and mapping is explicit. Entities use `Long` identity IDs, optimistic versions, and immutable creation/modification audit metadata.
+The backend follows a ports-and-adapters (hexagonal) architecture:
+
+- `domain/model` contains framework-independent business models.
+- `application/port/in` defines the operations exposed by the application.
+- `application/port/out` defines infrastructure capabilities required by use cases.
+- `application/service` implements use cases without Spring or persistence dependencies.
+- `infrastructure/web` contains inbound REST adapters and transport DTO mapping.
+- `infrastructure/persistence` contains JPA entities, Spring Data repositories, and outbound adapters.
+- `infrastructure/security` contains JWT and Spring Security adapters.
+- `infrastructure/config` is the composition root that wires port implementations to use cases.
+
+Dependencies point inward: infrastructure depends on application and domain, while domain and application do not depend on infrastructure or Spring.
