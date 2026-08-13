@@ -1,1 +1,48 @@
-package it.financemanager.infrastructure.persistence.adapter;import it.financemanager.application.port.out.TransactionPort;import it.financemanager.domain.model.*;import it.financemanager.infrastructure.persistence.entity.*;import it.financemanager.infrastructure.persistence.repository.*;import org.springframework.data.domain.PageRequest;import org.springframework.stereotype.Component;import org.springframework.transaction.annotation.Transactional;import java.math.BigDecimal;import java.time.LocalDate;import java.util.*;@Component @Transactional public class TransactionPersistenceAdapter implements TransactionPort{private final TransactionJpaRepository r;private final UserJpaRepository users;private final CategoryJpaRepository categories;public TransactionPersistenceAdapter(TransactionJpaRepository r,UserJpaRepository u,CategoryJpaRepository c){this.r=r;users=u;categories=c;}public List<Transaction> findForDashboard(Long uid,LocalDate f,LocalDate t){return r.dashboard(uid,f,t).stream().map(PersistenceMapper::transaction).toList();}public PageResult<Transaction> findAll(Long uid,LocalDate f,LocalDate t,int page,int size){var p=r.findAllByUserIdAndDateBetween(uid,f,t,PageRequest.of(page,size,org.springframework.data.domain.Sort.by("date").descending()));return new PageResult<>(p.getContent().stream().map(PersistenceMapper::transaction).toList(),p.getNumber(),p.getSize(),p.getTotalElements(),p.getTotalPages());}public Optional<Transaction> findByIdAndUser(Long id,Long uid){return r.findByIdAndUserId(id,uid).map(PersistenceMapper::transaction);}public Transaction create(Long uid,Long cid,TransactionType type,BigDecimal a,LocalDate d,String x){return PersistenceMapper.transaction(r.save(new TransactionEntity(users.getReferenceById(uid),categories.getReferenceById(cid),type,a,d,x)));}public Transaction update(Transaction t,Long cid,TransactionType type,BigDecimal a,LocalDate d,String x){TransactionEntity e=r.getReferenceById(t.id());e.set(categories.getReferenceById(cid),type,a,d,x);return PersistenceMapper.transaction(r.save(e));}public void delete(Transaction t){r.deleteById(t.id());}}
+package it.financemanager.infrastructure.persistence.adapter;
+import it.financemanager.application.model.PageResult;
+import it.financemanager.application.port.out.TransactionPort;
+import it.financemanager.domain.model.*;
+import it.financemanager.infrastructure.persistence.entity.*;
+import it.financemanager.infrastructure.persistence.repository.*;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.*;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+@Component
+@Transactional
+public class TransactionPersistenceAdapter implements TransactionPort {
+    private final TransactionJpaRepository r;
+    private final UserJpaRepository users;
+    private final CategoryJpaRepository categories;
+    public TransactionPersistenceAdapter(TransactionJpaRepository r, UserJpaRepository u, CategoryJpaRepository c) {
+        this.r = r;
+        users = u;
+        categories = c;
+    }
+    public List<Transaction> findForDashboard(Long uid, LocalDate f, LocalDate t) {
+        return r.dashboard(uid, f, t).stream().map(PersistenceMapper::transaction).toList();
+    }
+    public PageResult<Transaction> findAll(Long uid, LocalDate f, LocalDate t, int page, int size) {
+        var p = r.findAllByUserIdAndDateBetween(
+            uid, f, t, PageRequest.of(page, size, org.springframework.data.domain.Sort.by("date").descending()));
+        return new PageResult<>(p.getContent().stream().map(PersistenceMapper::transaction).toList(), p.getNumber(),
+            p.getSize(), p.getTotalElements(), p.getTotalPages());
+    }
+    public Optional<Transaction> findByIdAndUser(Long id, Long uid) {
+        return r.findByIdAndUserId(id, uid).map(PersistenceMapper::transaction);
+    }
+    public Transaction create(Long uid, Long cid, TransactionType type, BigDecimal a, LocalDate d, String x) {
+        return PersistenceMapper.transaction(r.save(
+            new TransactionEntity(users.getReferenceById(uid), categories.getReferenceById(cid), type, a, d, x)));
+    }
+    public Transaction update(Transaction t, Long cid, TransactionType type, BigDecimal a, LocalDate d, String x) {
+        TransactionEntity e = r.getReferenceById(t.id());
+        e.set(categories.getReferenceById(cid), type, a, d, x);
+        return PersistenceMapper.transaction(r.save(e));
+    }
+    public void delete(Transaction t) {
+        r.deleteById(t.id());
+    }
+}

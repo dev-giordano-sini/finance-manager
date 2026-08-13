@@ -1,2 +1,4 @@
 package it.financemanager.application.port.out;
-public interface CurrentActorPort { String email(); }
+public interface CurrentActorPort {
+    String email();
+}

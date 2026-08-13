@@ -1,8 +1,42 @@
 package it.financemanager.application.service;
-import it.financemanager.application.exception.*; import it.financemanager.application.port.in.CategoryUseCase; import it.financemanager.application.port.out.*; import it.financemanager.domain.model.*; import java.util.List; import java.util.Locale;
-public final class CategoryService implements CategoryUseCase { private final CategoryPort categories; private final UserResolver users;
- public CategoryService(CategoryPort categories,CurrentActorPort actor,UserPort userPort){this.categories=categories;users=new UserResolver(actor,userPort);} public List<Category> list(){return categories.findAllByUser(users.current().id());} public Category get(Long id){return find(id,users.current().id());}
- public Category create(String name,String color){Long userId=users.current().id();String clean=name.trim();if(categories.existsByName(userId,clean))throw new ConflictException("Category name already exists");return categories.create(userId,clean,color.toUpperCase(Locale.ROOT));}
- public Category update(Long id,String name,String color){Long uid=users.current().id();Category category=find(id,uid);String clean=name.trim();if(!category.name().equalsIgnoreCase(clean)&&categories.existsByName(uid,clean))throw new ConflictException("Category name already exists");return categories.update(category,clean,color.toUpperCase(Locale.ROOT));}
- public void delete(Long id){categories.delete(find(id,users.current().id()));} private Category find(Long id,Long uid){return categories.findByIdAndUser(id,uid).orElseThrow(()->new ResourceNotFoundException("Category",id));}
+import it.financemanager.application.exception.*;
+import it.financemanager.application.port.in.CategoryUseCase;
+import it.financemanager.application.port.out.*;
+import it.financemanager.domain.model.*;
+import java.util.List;
+import java.util.Locale;
+public final class CategoryService implements CategoryUseCase {
+    private final CategoryPort categories;
+    private final UserResolver users;
+    public CategoryService(CategoryPort categories, CurrentActorPort actor, UserPort userPort) {
+        this.categories = categories;
+        users = new UserResolver(actor, userPort);
+    }
+    public List<Category> list() {
+        return categories.findAllByUser(users.current().id());
+    }
+    public Category get(Long id) {
+        return find(id, users.current().id());
+    }
+    public Category create(String name, String color) {
+        Long userId = users.current().id();
+        String clean = name.trim();
+        if (categories.existsByName(userId, clean))
+            throw new ConflictException("Category name already exists");
+        return categories.create(userId, clean, color.toUpperCase(Locale.ROOT));
+    }
+    public Category update(Long id, String name, String color) {
+        Long uid = users.current().id();
+        Category category = find(id, uid);
+        String clean = name.trim();
+        if (!category.name().equalsIgnoreCase(clean) && categories.existsByName(uid, clean))
+            throw new ConflictException("Category name already exists");
+        return categories.update(category, clean, color.toUpperCase(Locale.ROOT));
+    }
+    public void delete(Long id) {
+        categories.delete(find(id, users.current().id()));
+    }
+    private Category find(Long id, Long uid) {
+        return categories.findByIdAndUser(id, uid).orElseThrow(() -> new ResourceNotFoundException("Category", id));
+    }
 }

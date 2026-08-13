@@ -1,1 +1,37 @@
-package it.financemanager.infrastructure.web;import it.financemanager.application.port.in.BudgetUseCase;import it.financemanager.infrastructure.web.dto.ApiDtos.*;import jakarta.validation.Valid;import org.springframework.http.*;import org.springframework.web.bind.annotation.*;import java.util.*;@RestController @RequestMapping("/api/v1/budgets")public class BudgetController{private final BudgetUseCase u;public BudgetController(BudgetUseCase u){this.u=u;}@GetMapping List<BudgetResponse> list(){return u.list().stream().map(WebMapper::budget).toList();}@GetMapping("/{id}")BudgetResponse get(@PathVariable Long id){return WebMapper.budget(u.get(id));}@PostMapping @ResponseStatus(HttpStatus.CREATED)BudgetResponse create(@Valid @RequestBody BudgetRequest r){return WebMapper.budget(u.create(r.categoryId(),r.amount(),r.startDate(),r.endDate()));}@PutMapping("/{id}")BudgetResponse update(@PathVariable Long id,@Valid @RequestBody BudgetRequest r){return WebMapper.budget(u.update(id,r.categoryId(),r.amount(),r.startDate(),r.endDate()));}@DeleteMapping("/{id}")@ResponseStatus(HttpStatus.NO_CONTENT)void delete(@PathVariable Long id){u.delete(id);}}
+package it.financemanager.infrastructure.web;
+import it.financemanager.application.port.in.BudgetUseCase;
+import it.financemanager.infrastructure.web.dto.ApiDtos.*;
+import jakarta.validation.Valid;
+import java.util.*;
+import org.springframework.http.*;
+import org.springframework.web.bind.annotation.*;
+@RestController
+@RequestMapping("/api/v1/budgets")
+public class BudgetController {
+    private final BudgetUseCase u;
+    public BudgetController(BudgetUseCase u) {
+        this.u = u;
+    }
+    @GetMapping
+    List<BudgetResponse> list() {
+        return u.list().stream().map(WebMapper::budget).toList();
+    }
+    @GetMapping("/{id}")
+    BudgetResponse get(@PathVariable Long id) {
+        return WebMapper.budget(u.get(id));
+    }
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    BudgetResponse create(@Valid @RequestBody BudgetRequest r) {
+        return WebMapper.budget(u.create(r.categoryId(), r.amount(), r.startDate(), r.endDate()));
+    }
+    @PutMapping("/{id}")
+    BudgetResponse update(@PathVariable Long id, @Valid @RequestBody BudgetRequest r) {
+        return WebMapper.budget(u.update(id, r.categoryId(), r.amount(), r.startDate(), r.endDate()));
+    }
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    void delete(@PathVariable Long id) {
+        u.delete(id);
+    }
+}

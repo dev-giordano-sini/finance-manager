@@ -1,3 +1,57 @@
 package it.financemanager.application.service;
-import it.financemanager.application.exception.ResourceNotFoundException;import it.financemanager.application.port.in.TransactionUseCase;import it.financemanager.application.port.out.*;import it.financemanager.domain.model.*;import java.math.BigDecimal;import java.time.LocalDate;
-public final class TransactionService implements TransactionUseCase {private final TransactionPort transactions;private final CategoryPort categories;private final UserResolver users;public TransactionService(TransactionPort t,CategoryPort c,CurrentActorPort a,UserPort u){transactions=t;categories=c;users=new UserResolver(a,u);}public TransactionPort.PageResult<Transaction> list(LocalDate from,LocalDate to,int page,int size){if(from.isAfter(to))throw new IllegalArgumentException("from must not be after to");return transactions.findAll(users.current().id(),from,to,page,size);}public Transaction get(Long id){return find(id,users.current().id());}public Transaction create(Long cid,TransactionType type,BigDecimal amount,LocalDate date,String description){Long uid=users.current().id();category(cid,uid);return transactions.create(uid,cid,type,amount,date,clean(description));}public Transaction update(Long id,Long cid,TransactionType type,BigDecimal amount,LocalDate date,String description){Long uid=users.current().id();category(cid,uid);return transactions.update(find(id,uid),cid,type,amount,date,clean(description));}public void delete(Long id){transactions.delete(find(id,users.current().id()));}private Transaction find(Long id,Long uid){return transactions.findByIdAndUser(id,uid).orElseThrow(()->new ResourceNotFoundException("Transaction",id));}private void category(Long id,Long uid){categories.findByIdAndUser(id,uid).orElseThrow(()->new ResourceNotFoundException("Category",id));}private String clean(String s){return s==null||s.isBlank()?null:s.trim();}}
+import it.financemanager.application.exception.ResourceNotFoundException;
+import it.financemanager.application.model.PageResult;
+import it.financemanager.application.port.in.TransactionUseCase;
+import it.financemanager.application.port.out.*;
+import it.financemanager.domain.model.*;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+public final class TransactionService implements TransactionUseCase {
+    private final TransactionPort transactions;
+    private final CategoryPort categories;
+    private final UserResolver users;
+    public TransactionService(TransactionPort t, CategoryPort c, CurrentActorPort a, UserPort u) {
+        transactions = t;
+        categories = c;
+        users = new UserResolver(a, u);
+    }
+    public PageResult<Transaction> list(LocalDate from, LocalDate to, int page, int size) {
+        if (from.isAfter(to)) {
+            throw new IllegalArgumentException("from must not be after to");
+        }
+        if (page < 0) {
+            throw new IllegalArgumentException("page must not be negative");
+        }
+        if (size < 1 || size > 100) {
+            throw new IllegalArgumentException("size must be between 1 and 100");
+        }
+        return transactions.findAll(users.current().id(), from, to, page, size);
+    }
+    public Transaction get(Long id) {
+        return find(id, users.current().id());
+    }
+    public Transaction create(Long cid, TransactionType type, BigDecimal amount, LocalDate date, String description) {
+        Long uid = users.current().id();
+        category(cid, uid);
+        return transactions.create(uid, cid, type, amount, date, clean(description));
+    }
+    public Transaction update(
+        Long id, Long cid, TransactionType type, BigDecimal amount, LocalDate date, String description) {
+        Long uid = users.current().id();
+        category(cid, uid);
+        return transactions.update(find(id, uid), cid, type, amount, date, clean(description));
+    }
+    public void delete(Long id) {
+        transactions.delete(find(id, users.current().id()));
+    }
+    private Transaction find(Long id, Long uid) {
+        return transactions.findByIdAndUser(id, uid).orElseThrow(
+            () -> new ResourceNotFoundException("Transaction", id));
+    }
+    private void category(Long id, Long uid) {
+        categories.findByIdAndUser(id, uid).orElseThrow(() -> new ResourceNotFoundException("Category", id));
+    }
+    private String clean(String s) {
+        return s == null || s.isBlank() ? null : s.trim();
+    }
+}

@@ -96,7 +96,7 @@ curl http://localhost:8080/api/v1/categories \
 | Budgets | `GET, POST /api/v1/budgets`; `GET, PUT, DELETE /api/v1/budgets/{id}` |
 | Dashboard | `GET /api/v1/dashboard` |
 
-Transactions support `from`, `to`, `page`, `size`, and `sort` query parameters. Page size is capped at 100. Monetary amounts are positive decimals with two fractional digits. Dates use ISO-8601 (`YYYY-MM-DD`). A user can only reference and access their own data; inaccessible IDs deliberately return 404.
+Transactions support `from`, `to`, `page`, and `size` query parameters and are sorted by date descending. Page size is capped at 100. Monetary amounts are positive decimals with two fractional digits. Dates use ISO-8601 (`YYYY-MM-DD`). A user can only reference and access their own data; inaccessible IDs deliberately return 404.
 
 The dashboard accepts optional ISO-8601 `from` and `to` parameters and defaults to the current month through today. It returns income, expenses, balance, expense totals by category, daily cash flow, and the five most recent transactions for the selected period.
 
@@ -123,7 +123,7 @@ npm run build
 | `DB_URL` | `jdbc:postgresql://localhost:5432/finance_manager` | JDBC connection URL |
 | `DB_USERNAME` | `finance` | Database username |
 | `DB_PASSWORD` | `finance` | Database password |
-| `JWT_SECRET` | development-only value | HMAC key; must be at least 32 bytes |
+| `JWT_SECRET` | required | HMAC key; must be at least 32 bytes |
 | `JWT_EXPIRATION` | `3600s` | Access-token lifetime (Spring duration syntax) |
 | `SERVER_PORT` | `8080` | HTTP port |
 

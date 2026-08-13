@@ -14,9 +14,9 @@ public class OpenApiConfig {
     OpenAPI financeManagerOpenApi() {
         String scheme = "bearerAuth";
         return new OpenAPI()
-                .info(new Info().title("Finance Manager API").version("v1").description("Personal finance management API"))
-                .addSecurityItem(new SecurityRequirement().addList(scheme))
-                .components(new Components().addSecuritySchemes(scheme,
-                        new SecurityScheme().name(scheme).type(SecurityScheme.Type.HTTP).scheme("bearer").bearerFormat("JWT")));
+            .info(new Info().title("Finance Manager API").version("v1").description("Personal finance management API"))
+            .addSecurityItem(new SecurityRequirement().addList(scheme))
+            .components(new Components().addSecuritySchemes(scheme,
+                new SecurityScheme().name(scheme).type(SecurityScheme.Type.HTTP).scheme("bearer").bearerFormat("JWT")));
     }
 }

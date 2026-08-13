@@ -1,3 +1,65 @@
 package it.financemanager.application.service;
-import it.financemanager.application.port.in.DashboardUseCase;import it.financemanager.application.port.out.*;import it.financemanager.domain.model.*;import java.math.*;import java.time.*;import java.util.*;
-public final class DashboardService implements DashboardUseCase {private static final BigDecimal ZERO=new BigDecimal("0.00");private final TransactionPort transactions;private final UserResolver users;private final Clock clock;public DashboardService(TransactionPort t,CurrentActorPort a,UserPort u,Clock c){transactions=t;users=new UserResolver(a,u);clock=c;}public Dashboard get(LocalDate from,LocalDate to){LocalDate end=to==null?LocalDate.now(clock):to;LocalDate start=from==null?end.withDayOfMonth(1):from;if(start.isAfter(end))throw new IllegalArgumentException("from must not be after to");List<Transaction> values=transactions.findForDashboard(users.current().id(),start,end);BigDecimal income=total(values,TransactionType.INCOME),expenses=total(values,TransactionType.EXPENSE);return new Dashboard(start,end,income,expenses,income.subtract(expenses),values.size(),categories(values,expenses),days(values,start,end),values.stream().limit(5).toList());}private BigDecimal total(List<Transaction> v,TransactionType t){return v.stream().filter(x->x.type()==t).map(Transaction::amount).reduce(ZERO,BigDecimal::add);}private List<CategoryExpense> categories(List<Transaction> v,BigDecimal total){record C(String n,String c,BigDecimal a){}Map<Long,C> m=new HashMap<>();v.stream().filter(x->x.type()==TransactionType.EXPENSE).forEach(x->m.compute(x.categoryId(),(k,c)->c==null?new C(x.categoryName(),x.categoryColor(),x.amount()):new C(c.n(),c.c(),c.a().add(x.amount()))));return m.entrySet().stream().map(e->new CategoryExpense(e.getKey(),e.getValue().n(),e.getValue().c(),e.getValue().a(),total.signum()==0?ZERO:e.getValue().a().multiply(BigDecimal.valueOf(100)).divide(total,2,RoundingMode.HALF_UP))).sorted((a,b)->b.amount().compareTo(a.amount())).toList();}private List<DailyCashFlow> days(List<Transaction> v,LocalDate from,LocalDate to){Map<LocalDate,BigDecimal[]> m=new HashMap<>();v.forEach(x->{BigDecimal[] d=m.computeIfAbsent(x.date(),k->new BigDecimal[]{ZERO,ZERO});int i=x.type()==TransactionType.INCOME?0:1;d[i]=d[i].add(x.amount());});return from.datesUntil(to.plusDays(1)).map(d->{BigDecimal[] a=m.getOrDefault(d,new BigDecimal[]{ZERO,ZERO});return new DailyCashFlow(d,a[0],a[1],a[0].subtract(a[1]));}).toList();}}
+import it.financemanager.application.port.in.DashboardUseCase;
+import it.financemanager.application.port.out.*;
+import it.financemanager.domain.model.*;
+import java.math.*;
+import java.time.*;
+import java.util.*;
+public final class DashboardService implements DashboardUseCase {
+    private static final BigDecimal ZERO = new BigDecimal("0.00");
+    private final TransactionPort transactions;
+    private final UserResolver users;
+    private final Clock clock;
+    public DashboardService(TransactionPort t, CurrentActorPort a, UserPort u, Clock c) {
+        transactions = t;
+        users = new UserResolver(a, u);
+        clock = c;
+    }
+    public Dashboard get(LocalDate from, LocalDate to) {
+        LocalDate end = to == null ? LocalDate.now(clock) : to;
+        LocalDate start = from == null ? end.withDayOfMonth(1) : from;
+        if (start.isAfter(end))
+            throw new IllegalArgumentException("from must not be after to");
+        List<Transaction> values = transactions.findForDashboard(users.current().id(), start, end);
+        BigDecimal income = total(values, TransactionType.INCOME), expenses = total(values, TransactionType.EXPENSE);
+        return new Dashboard(start, end, income, expenses, income.subtract(expenses), values.size(),
+            categories(values, expenses), days(values, start, end), values.stream().limit(5).toList());
+    }
+    private BigDecimal total(List<Transaction> v, TransactionType t) {
+        return v.stream().filter(x -> x.type() == t).map(Transaction::amount).reduce(ZERO, BigDecimal::add);
+    }
+    private List<CategoryExpense> categories(List<Transaction> v, BigDecimal total) {
+        record C(String n, String c, BigDecimal a) {}
+        Map<Long, C> m = new HashMap<>();
+        v.stream()
+            .filter(x -> x.type() == TransactionType.EXPENSE)
+            .forEach(x
+                -> m.compute(x.categoryId(),
+                    (k, c)
+                        -> c == null ? new C(x.categoryName(), x.categoryColor(), x.amount())
+                                     : new C(c.n(), c.c(), c.a().add(x.amount()))));
+        return m.entrySet()
+            .stream()
+            .map(e
+                -> new CategoryExpense(e.getKey(), e.getValue().n(), e.getValue().c(), e.getValue().a(),
+                    total.signum() == 0
+                        ? ZERO
+                        : e.getValue().a().multiply(BigDecimal.valueOf(100)).divide(total, 2, RoundingMode.HALF_UP)))
+            .sorted((a, b) -> b.amount().compareTo(a.amount()))
+            .toList();
+    }
+    private List<DailyCashFlow> days(List<Transaction> v, LocalDate from, LocalDate to) {
+        Map<LocalDate, BigDecimal[]> m = new HashMap<>();
+        v.forEach(x -> {
+            BigDecimal[] d = m.computeIfAbsent(x.date(), k -> new BigDecimal[] {ZERO, ZERO});
+            int i = x.type() == TransactionType.INCOME ? 0 : 1;
+            d[i] = d[i].add(x.amount());
+        });
+        return from.datesUntil(to.plusDays(1))
+            .map(d -> {
+                BigDecimal[] a = m.getOrDefault(d, new BigDecimal[] {ZERO, ZERO});
+                return new DailyCashFlow(d, a[0], a[1], a[0].subtract(a[1]));
+            })
+            .toList();
+    }
+}
