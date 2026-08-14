@@ -4,7 +4,7 @@ import it.financemanager.transaction.Transaction;
 import it.financemanager.transaction.TransactionStore;
 import it.financemanager.transaction.TransactionResponse;
 import it.financemanager.transaction.TransactionType;
-import it.financemanager.user.CurrentUserService;
+import it.financemanager.user.CurrentUserProvider;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,10 +24,10 @@ public class DashboardService implements DashboardUseCase {
     private static final BigDecimal ZERO = new BigDecimal("0.00");
 
     private final TransactionStore transactions;
-    private final CurrentUserService currentUser;
+    private final CurrentUserProvider currentUser;
     private final Clock clock;
 
-    public DashboardService(TransactionStore transactions, CurrentUserService currentUser, Clock clock) {
+    public DashboardService(TransactionStore transactions, CurrentUserProvider currentUser, Clock clock) {
         this.transactions = transactions;
         this.currentUser = currentUser;
         this.clock = clock;

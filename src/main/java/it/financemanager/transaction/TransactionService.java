@@ -5,7 +5,7 @@ import it.financemanager.category.CategoryUseCase;
 import it.financemanager.common.application.PageQuery;
 import it.financemanager.common.application.PageResult;
 import it.financemanager.common.exception.ResourceNotFoundException;
-import it.financemanager.user.CurrentUserService;
+import it.financemanager.user.CurrentUserProvider;
 import it.financemanager.user.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,8 +13,8 @@ import java.time.LocalDate;
 
 @Service @Transactional(readOnly = true)
 public class TransactionService implements TransactionUseCase {
-    private final TransactionStore repository; private final CategoryUseCase categories; private final CurrentUserService currentUser;
-    public TransactionService(TransactionStore repository, CategoryUseCase categories, CurrentUserService currentUser) { this.repository=repository; this.categories=categories; this.currentUser=currentUser; }
+    private final TransactionStore repository; private final CategoryUseCase categories; private final CurrentUserProvider currentUser;
+    public TransactionService(TransactionStore repository, CategoryUseCase categories, CurrentUserProvider currentUser) { this.repository=repository; this.categories=categories; this.currentUser=currentUser; }
     public PageResult<TransactionResponse> list(LocalDate from, LocalDate to, PageQuery pageable) {
         if (from.isAfter(to)) throw new IllegalArgumentException("from must not be after to");
         PageResult<Transaction> page = repository.findAllByUserIdAndDateBetween(currentUser.get().getId(), from, to, pageable);

@@ -1,15 +1,18 @@
 package it.financemanager.user;
 
 import it.financemanager.common.exception.ResourceNotFoundException;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CurrentUserService implements CurrentUserUseCase {
+public class CurrentUserService implements CurrentUserUseCase, CurrentUserProvider {
     private final UserStore repository;
-    public CurrentUserService(UserStore repository) { this.repository = repository; }
+    private final AuthenticatedIdentity identity;
+    public CurrentUserService(UserStore repository, AuthenticatedIdentity identity) {
+        this.repository = repository;
+        this.identity = identity;
+    }
     public User get() {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        String email = identity.username();
         return repository.findByEmailIgnoreCase(email).orElseThrow(() -> new ResourceNotFoundException("User", 0L));
     }
 

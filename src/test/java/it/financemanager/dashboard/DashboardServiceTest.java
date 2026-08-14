@@ -5,7 +5,7 @@ import it.financemanager.common.BaseEntity;
 import it.financemanager.transaction.Transaction;
 import it.financemanager.transaction.TransactionStore;
 import it.financemanager.transaction.TransactionType;
-import it.financemanager.user.CurrentUserService;
+import it.financemanager.user.CurrentUserProvider;
 import it.financemanager.user.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,7 +33,7 @@ class DashboardServiceTest {
     @Mock
     private TransactionStore transactions;
     @Mock
-    private CurrentUserService currentUser;
+    private CurrentUserProvider currentUser;
 
     private DashboardService service;
     private User user;

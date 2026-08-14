@@ -14,9 +14,9 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class CategoryService implements CategoryUseCase {
     private final CategoryStore repository;
-    private final CurrentUserService currentUser;
+    private final CurrentUserProvider currentUser;
 
-    public CategoryService(CategoryStore repository, CurrentUserService currentUser) {
+    public CategoryService(CategoryStore repository, CurrentUserProvider currentUser) {
         this.repository = repository;
         this.currentUser = currentUser;
     }
