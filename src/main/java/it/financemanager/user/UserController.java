@@ -5,9 +5,9 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/users")
 public class UserController {
-    private final CurrentUserService currentUserService;
+    private final CurrentUserUseCase currentUserService;
 
-    public UserController(CurrentUserService currentUserService) {
+    public UserController(CurrentUserUseCase currentUserService) {
         this.currentUserService = currentUserService;
     }
 

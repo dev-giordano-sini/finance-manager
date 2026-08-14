@@ -12,9 +12,9 @@ import java.time.LocalDate;
 @RestController
 @RequestMapping("/api/v1/transactions")
 public class TransactionController {
-    private final TransactionService service;
+    private final TransactionUseCase service;
 
-    public TransactionController(TransactionService service) {
+    public TransactionController(TransactionUseCase service) {
         this.service = service;
     }
 

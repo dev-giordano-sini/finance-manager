@@ -6,9 +6,9 @@ import org.springframework.stereotype.Service;
 @Service
 @Transactional
 public class RoleService {
-    private final RoleRepository roleRepository;
+    private final RoleStore roleRepository;
 
-    public RoleService(RoleRepository roleRepository) {
+    public RoleService(RoleStore roleRepository) {
         this.roleRepository = roleRepository;
     }
 

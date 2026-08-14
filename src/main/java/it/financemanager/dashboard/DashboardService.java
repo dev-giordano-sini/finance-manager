@@ -1,7 +1,7 @@
 package it.financemanager.dashboard;
 
 import it.financemanager.transaction.Transaction;
-import it.financemanager.transaction.TransactionRepository;
+import it.financemanager.transaction.TransactionStore;
 import it.financemanager.transaction.TransactionResponse;
 import it.financemanager.transaction.TransactionType;
 import it.financemanager.user.CurrentUserService;
@@ -20,14 +20,14 @@ import java.util.TreeMap;
 
 @Service
 @Transactional(readOnly = true)
-public class DashboardService {
+public class DashboardService implements DashboardUseCase {
     private static final BigDecimal ZERO = new BigDecimal("0.00");
 
-    private final TransactionRepository transactions;
+    private final TransactionStore transactions;
     private final CurrentUserService currentUser;
     private final Clock clock;
 
-    public DashboardService(TransactionRepository transactions, CurrentUserService currentUser, Clock clock) {
+    public DashboardService(TransactionStore transactions, CurrentUserService currentUser, Clock clock) {
         this.transactions = transactions;
         this.currentUser = currentUser;
         this.clock = clock;

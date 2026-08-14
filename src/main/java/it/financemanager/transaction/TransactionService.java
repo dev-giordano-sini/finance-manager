@@ -1,7 +1,7 @@
 package it.financemanager.transaction;
 
 import it.financemanager.category.Category;
-import it.financemanager.category.CategoryService;
+import it.financemanager.category.CategoryUseCase;
 import it.financemanager.common.exception.ResourceNotFoundException;
 import it.financemanager.user.CurrentUserService;
 import it.financemanager.user.User;
@@ -11,9 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 
 @Service @Transactional(readOnly = true)
-public class TransactionService {
-    private final TransactionRepository repository; private final CategoryService categories; private final CurrentUserService currentUser;
-    public TransactionService(TransactionRepository repository, CategoryService categories, CurrentUserService currentUser) { this.repository=repository; this.categories=categories; this.currentUser=currentUser; }
+public class TransactionService implements TransactionUseCase {
+    private final TransactionStore repository; private final CategoryUseCase categories; private final CurrentUserService currentUser;
+    public TransactionService(TransactionStore repository, CategoryUseCase categories, CurrentUserService currentUser) { this.repository=repository; this.categories=categories; this.currentUser=currentUser; }
     public Page<TransactionResponse> list(LocalDate from, LocalDate to, Pageable pageable) {
         if (from.isAfter(to)) throw new IllegalArgumentException("from must not be after to");
         return repository.findAllByUserIdAndDateBetween(currentUser.get().getId(), from, to, pageable).map(this::map);

@@ -6,7 +6,7 @@ import it.financemanager.role.BaseRole;
 import it.financemanager.role.Role;
 import it.financemanager.role.RoleService;
 import it.financemanager.user.User;
-import it.financemanager.user.UserRepository;
+import it.financemanager.user.UserStore;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,13 +17,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Locale;
 
 @Service
-public class AuthService {
-    private final UserRepository users;
+public class AuthService implements AuthUseCase {
+    private final UserStore users;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwt;
     private final RoleService roleService;
-    public AuthService(UserRepository users, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JwtService jwt, RoleService roleService) {
+    public AuthService(UserStore users, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JwtService jwt, RoleService roleService) {
         this.users = users; this.passwordEncoder = passwordEncoder; this.authenticationManager = authenticationManager; this.jwt = jwt;
         this.roleService = roleService;
     }

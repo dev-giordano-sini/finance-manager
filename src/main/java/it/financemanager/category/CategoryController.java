@@ -7,7 +7,7 @@ import java.util.List;
 
 @RestController @RequestMapping("/api/v1/categories")
 public class CategoryController {
-    private final CategoryService service; public CategoryController(CategoryService service) { this.service = service; }
+    private final CategoryUseCase service; public CategoryController(CategoryUseCase service) { this.service = service; }
     @GetMapping List<CategoryResponse> list() { return service.list(); }
     @GetMapping("/{id}") CategoryResponse get(@PathVariable Long id) { return service.get(id); }
     @PostMapping @ResponseStatus(HttpStatus.CREATED) CategoryResponse create(@Valid @RequestBody CategoryRequest request) { return service.create(request); }

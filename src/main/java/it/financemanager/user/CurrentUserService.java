@@ -5,9 +5,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CurrentUserService {
-    private final UserRepository repository;
-    public CurrentUserService(UserRepository repository) { this.repository = repository; }
+public class CurrentUserService implements CurrentUserUseCase {
+    private final UserStore repository;
+    public CurrentUserService(UserStore repository) { this.repository = repository; }
     public User get() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         return repository.findByEmailIgnoreCase(email).orElseThrow(() -> new ResourceNotFoundException("User", 0L));
