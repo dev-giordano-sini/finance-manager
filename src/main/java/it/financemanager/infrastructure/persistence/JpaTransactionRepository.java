@@ -1,4 +1,6 @@
-package it.financemanager.transaction;
+package it.financemanager.infrastructure.persistence;
+
+import it.financemanager.transaction.Transaction;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -9,7 +11,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-public interface TransactionRepository extends JpaRepository<Transaction, Long>, TransactionStore {
+interface JpaTransactionRepository extends JpaRepository<Transaction, Long> {
     Optional<Transaction> findByIdAndUserId(Long id, Long userId);
     Page<Transaction> findAllByUserIdAndDateBetween(Long userId, LocalDate from, LocalDate to, Pageable pageable);
 

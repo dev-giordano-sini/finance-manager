@@ -1,0 +1,3 @@
+package it.financemanager.infrastructure.persistence;
+import it.financemanager.budget.*; import org.springframework.stereotype.Repository; import java.util.*;
+@Repository class BudgetPersistenceAdapter implements BudgetStore { private final JpaBudgetRepository repository; BudgetPersistenceAdapter(JpaBudgetRepository repository){this.repository=repository;} public List<Budget> findAllByUserIdOrderByStartDateDesc(Long userId){return repository.findAllByUserIdOrderByStartDateDesc(userId);} public Optional<Budget> findByIdAndUserId(Long id,Long userId){return repository.findByIdAndUserId(id,userId);} public Budget save(Budget value){return repository.save(value);} public void delete(Budget value){repository.delete(value);} }

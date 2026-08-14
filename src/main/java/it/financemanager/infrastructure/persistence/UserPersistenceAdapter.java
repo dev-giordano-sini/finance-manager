@@ -1,0 +1,3 @@
+package it.financemanager.infrastructure.persistence;
+import it.financemanager.user.*; import org.springframework.stereotype.Repository; import java.util.*;
+@Repository class UserPersistenceAdapter implements UserStore { private final JpaUserRepository repository; UserPersistenceAdapter(JpaUserRepository repository){this.repository=repository;} public Optional<User> findByEmailIgnoreCase(String email){return repository.findByEmailIgnoreCase(email);} public boolean existsByEmailIgnoreCase(String email){return repository.existsByEmailIgnoreCase(email);} public User saveAndFlush(User user){return repository.saveAndFlush(user);} }

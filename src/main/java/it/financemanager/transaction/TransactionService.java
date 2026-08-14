@@ -2,10 +2,11 @@ package it.financemanager.transaction;
 
 import it.financemanager.category.Category;
 import it.financemanager.category.CategoryUseCase;
+import it.financemanager.common.application.PageQuery;
+import it.financemanager.common.application.PageResult;
 import it.financemanager.common.exception.ResourceNotFoundException;
 import it.financemanager.user.CurrentUserService;
 import it.financemanager.user.User;
-import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
@@ -14,9 +15,10 @@ import java.time.LocalDate;
 public class TransactionService implements TransactionUseCase {
     private final TransactionStore repository; private final CategoryUseCase categories; private final CurrentUserService currentUser;
     public TransactionService(TransactionStore repository, CategoryUseCase categories, CurrentUserService currentUser) { this.repository=repository; this.categories=categories; this.currentUser=currentUser; }
-    public Page<TransactionResponse> list(LocalDate from, LocalDate to, Pageable pageable) {
+    public PageResult<TransactionResponse> list(LocalDate from, LocalDate to, PageQuery pageable) {
         if (from.isAfter(to)) throw new IllegalArgumentException("from must not be after to");
-        return repository.findAllByUserIdAndDateBetween(currentUser.get().getId(), from, to, pageable).map(this::map);
+        PageResult<Transaction> page = repository.findAllByUserIdAndDateBetween(currentUser.get().getId(), from, to, pageable);
+        return new PageResult<>(page.content().stream().map(this::map).toList(), page.page(), page.size(), page.totalElements(), page.totalPages());
     }
     public TransactionResponse get(Long id) { return map(find(id, currentUser.get().getId())); }
     @Transactional public TransactionResponse create(TransactionRequest request) {

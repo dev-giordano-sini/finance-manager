@@ -1,6 +1,8 @@
 package it.financemanager.transaction;
 
 import jakarta.validation.Valid;
+import it.financemanager.common.application.PageQuery;
+import it.financemanager.common.application.PageResult;
 import org.springframework.data.domain.*;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -19,10 +21,13 @@ public class TransactionController {
     }
 
     @GetMapping
-    Page<TransactionResponse> list(@RequestParam(defaultValue = "1900-01-01") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
+    PageResult<TransactionResponse> list(@RequestParam(defaultValue = "1900-01-01") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
                                    @RequestParam(defaultValue = "2999-12-31") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to,
                                    @PageableDefault(size = 20, sort = "date", direction = Sort.Direction.DESC) Pageable pageable) {
-        return service.list(from, to, pageable);
+        String sortBy = pageable.getSort().stream().findFirst().map(Sort.Order::getProperty).orElse("date");
+        PageQuery.Direction direction = pageable.getSort().stream().findFirst().map(Sort.Order::isAscending)
+                .orElse(false) ? PageQuery.Direction.ASC : PageQuery.Direction.DESC;
+        return service.list(from, to, new PageQuery(pageable.getPageNumber(), pageable.getPageSize(), sortBy, direction));
     }
 
     @GetMapping("/{id}")
