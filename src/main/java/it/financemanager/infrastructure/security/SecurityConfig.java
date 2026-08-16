@@ -1,4 +1,4 @@
-package it.financemanager.common.security;
+package it.financemanager.infrastructure.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.financemanager.role.BaseRole;

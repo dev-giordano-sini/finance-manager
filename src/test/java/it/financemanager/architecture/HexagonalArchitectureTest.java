@@ -27,7 +27,7 @@ class HexagonalArchitectureTest {
         List<Path> violations = javaSources()
                 .filter(path -> containsAny(path, "org.springframework.data.jpa", "JpaRepository"))
                 .filter(path -> !path.toString().contains("/infrastructure/persistence/")
-                        && !path.toString().endsWith("/common/config/JpaConfig.java")
+                        && !path.toString().endsWith("/infrastructure/config/JpaConfig.java")
                         && !path.toString().endsWith("/common/BaseEntity.java"))
                 .toList();
 
@@ -44,6 +44,17 @@ class HexagonalArchitectureTest {
                 .toList();
 
         assertThat(violations).as("controllers coupled to concrete use-case implementations").isEmpty();
+    }
+
+    @Test
+    void webAndConfigurationTypesAreInfrastructureAdapters() throws IOException {
+        List<Path> violations = javaSources()
+                .filter(path -> containsAny(path, "@RestController", "@RestControllerAdvice",
+                        "@Configuration", "jakarta.validation"))
+                .filter(path -> !path.toString().contains("/infrastructure/"))
+                .toList();
+
+        assertThat(violations).as("framework entry points outside infrastructure").isEmpty();
     }
 
     private java.util.stream.Stream<Path> javaSources() throws IOException {

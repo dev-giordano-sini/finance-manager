@@ -1,4 +1,4 @@
-package it.financemanager.common.security;
+package it.financemanager.infrastructure.security;
 
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;

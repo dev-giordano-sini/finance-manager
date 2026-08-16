@@ -1,4 +1,6 @@
-package it.financemanager.auth;
+package it.financemanager.infrastructure.web.auth;
+
+import it.financemanager.auth.*;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

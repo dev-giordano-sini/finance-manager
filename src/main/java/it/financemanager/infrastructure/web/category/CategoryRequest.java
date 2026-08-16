@@ -1,4 +1,6 @@
-package it.financemanager.category;
+package it.financemanager.infrastructure.web.category;
+
+import it.financemanager.category.*;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;

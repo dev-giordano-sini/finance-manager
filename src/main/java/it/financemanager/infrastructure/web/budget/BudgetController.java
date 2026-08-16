@@ -1,4 +1,6 @@
-package it.financemanager.budget;
+package it.financemanager.infrastructure.web.budget;
+
+import it.financemanager.budget.*;
 import jakarta.validation.Valid; import org.springframework.http.HttpStatus; import org.springframework.web.bind.annotation.*; import java.util.List;
 @RestController @RequestMapping("/api/v1/budgets")
 public class BudgetController { private final BudgetUseCase service; public BudgetController(BudgetUseCase service){this.service=service;}

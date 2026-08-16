@@ -1,4 +1,6 @@
-package it.financemanager.user;
+package it.financemanager.infrastructure.web.user;
+
+import it.financemanager.user.*;
 
 import org.springframework.web.bind.annotation.*;
 

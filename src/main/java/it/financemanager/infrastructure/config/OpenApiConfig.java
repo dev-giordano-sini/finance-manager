@@ -1,4 +1,4 @@
-package it.financemanager.common.config;
+package it.financemanager.infrastructure.config;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;

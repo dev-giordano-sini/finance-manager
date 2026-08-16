@@ -1,4 +1,4 @@
-package it.financemanager.common.security;
+package it.financemanager.infrastructure.security;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import java.time.Duration;

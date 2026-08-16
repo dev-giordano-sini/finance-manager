@@ -1,4 +1,6 @@
-package it.financemanager.transaction;
+package it.financemanager.infrastructure.web.transaction;
+
+import it.financemanager.transaction.*;
 
 import jakarta.validation.Valid;
 import it.financemanager.common.application.PageQuery;

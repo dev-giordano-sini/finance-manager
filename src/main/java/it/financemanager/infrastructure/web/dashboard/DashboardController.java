@@ -1,4 +1,6 @@
-package it.financemanager.dashboard;
+package it.financemanager.infrastructure.web.dashboard;
+
+import it.financemanager.dashboard.*;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;

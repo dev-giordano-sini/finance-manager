@@ -1,4 +1,7 @@
-package it.financemanager.common.exception;
+package it.financemanager.infrastructure.web.common;
+
+import it.financemanager.common.exception.ConflictException;
+import it.financemanager.common.exception.ResourceNotFoundException;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;

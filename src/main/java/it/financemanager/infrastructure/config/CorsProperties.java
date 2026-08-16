@@ -1,4 +1,4 @@
-package it.financemanager.common.config;
+package it.financemanager.infrastructure.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

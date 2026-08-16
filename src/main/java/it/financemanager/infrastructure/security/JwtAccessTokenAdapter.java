@@ -1,7 +1,6 @@
 package it.financemanager.infrastructure.security;
 
 import it.financemanager.auth.AccessTokenIssuer;
-import it.financemanager.common.security.JwtService;
 import org.springframework.stereotype.Component;
 
 @Component
