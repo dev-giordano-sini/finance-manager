@@ -3,9 +3,9 @@ package it.financemanager.dashboard;
 import it.financemanager.category.Category;
 import it.financemanager.common.BaseEntity;
 import it.financemanager.transaction.Transaction;
-import it.financemanager.transaction.TransactionRepository;
+import it.financemanager.transaction.TransactionStore;
 import it.financemanager.transaction.TransactionType;
-import it.financemanager.user.CurrentUserService;
+import it.financemanager.user.CurrentUserProvider;
 import it.financemanager.user.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,9 +31,9 @@ class DashboardServiceTest {
     private static final LocalDate TODAY = LocalDate.of(2026, 8, 10);
 
     @Mock
-    private TransactionRepository transactions;
+    private TransactionStore transactions;
     @Mock
-    private CurrentUserService currentUser;
+    private CurrentUserProvider currentUser;
 
     private DashboardService service;
     private User user;
@@ -44,7 +44,7 @@ class DashboardServiceTest {
     void setUp() {
         Clock clock = Clock.fixed(Instant.parse("2026-08-10T12:00:00Z"), ZoneOffset.UTC);
         service = new DashboardService(transactions, currentUser, clock);
-        user = new User("user@example.com", "password", "User", null);
+        user = new User("user@example.com", "password", "User", "Example", null);
         groceries = new Category(user, "Spesa", "#FF0000");
         home = new Category(user, "Casa", "#00FF00");
         setId(user, 7L);

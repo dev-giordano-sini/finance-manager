@@ -1,33 +1,27 @@
 package it.financemanager.user;
-
 import it.financemanager.common.BaseEntity;
 import it.financemanager.role.Role;
-import jakarta.persistence.*;
-
-@Entity
-@Table(name = "users")
+import java.time.Instant;
 public class User extends BaseEntity {
-    @Column(nullable = false, unique = true, length = 254)
-    private String email;
-    @Column(nullable = false)
-    private String password;
-    @Column(nullable = false, length = 100)
-    private String name;
-    @Column(nullable = false, length = 100)
-    private String surname;
-    @OneToOne(fetch = FetchType.LAZY, optional = false) @JoinColumn(name = "role_id", nullable = false) private Role role;
-
-    protected User() { }
-    public User(String email, String password, String name, String surname, Role role) {
-        this.email = email;
-        this.password = password;
-        this.name = name;
-        this.surname = surname;
-        this.role = role;
-    }
-    public String getEmail() { return email; }
-    public String getPassword() { return password; }
-    public String getName() { return name; }
-    public String getSurname() { return surname; }
-    public Role getRole() { return role; }
+  private final String email, password, name, surname;
+  private final Role role;
+  public User(String email, String password, String name, String surname,
+              Role role) {
+    this(null, 0, null, null, email, password, name, surname, role);
+  }
+  public User(Long id, long version, Instant createdAt, Instant updatedAt,
+              String email, String password, String name, String surname,
+              Role role) {
+    super(id, version, createdAt, updatedAt);
+    this.email = email;
+    this.password = password;
+    this.name = name;
+    this.surname = surname;
+    this.role = role;
+  }
+  public String getEmail() { return email; }
+  public String getPassword() { return password; }
+  public String getName() { return name; }
+  public String getSurname() { return surname; }
+  public Role getRole() { return role; }
 }
