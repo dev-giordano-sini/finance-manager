@@ -1,0 +1,30 @@
+@startuml Spendly Use Cases
+
+left to right direction
+skinparam shadowing false
+
+actor User
+
+rectangle Spendly {
+
+  usecase "Register" as UC1
+  usecase "Login" as UC2
+  usecase "View Dashboard" as UC3
+  usecase "Manage Categories" as UC4
+  usecase "Manage Transactions" as UC5
+  usecase "Manage Budgets" as UC6
+  usecase "View Profile" as UC7
+  usecase "Logout" as UC8
+
+}
+
+User --> UC1
+User --> UC2
+User --> UC3
+User --> UC4
+User --> UC5
+User --> UC6
+User --> UC7
+User --> UC8
+
+@enduml

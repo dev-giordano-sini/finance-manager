@@ -1,0 +1,49 @@
+@startuml Spendly Architecture
+
+title Spendly - High Level Architecture
+
+skinparam componentStyle rectangle
+skinparam shadowing false
+
+package "Frontend" {
+  [Vue 3]
+  [Pinia]
+  [Axios]
+}
+
+package "Infrastructure" {
+  [REST Controllers]
+  [Security]
+  [Persistence Adapters]
+  [Spring Data JPA]
+}
+
+package "Application" {
+  [Use Cases]
+  [Services]
+}
+
+package "Domain" {
+  [User]
+  [Role]
+  [Category]
+  [Transaction]
+  [Budget]
+}
+
+database PostgreSQL
+
+Vue 3 --> Axios
+Axios --> "REST Controllers"
+
+"REST Controllers" --> "Use Cases"
+
+"Use Cases" --> "Services"
+
+"Services" --> "Persistence Adapters"
+
+"Persistence Adapters" --> "Spring Data JPA"
+
+"Spring Data JPA" --> PostgreSQL
+
+@enduml

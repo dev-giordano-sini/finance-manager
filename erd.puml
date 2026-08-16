@@ -1,0 +1,59 @@
+@startuml Spendly Database
+
+hide methods
+hide circle
+
+entity "Role" as role {
+  * id : BIGINT
+  --
+  code : VARCHAR
+  description : VARCHAR
+}
+
+entity "User" as user {
+  * id : BIGINT
+  --
+  name : VARCHAR
+  surname : VARCHAR
+  email : VARCHAR
+  password : VARCHAR
+}
+
+entity "Category" as category {
+  * id : BIGINT
+  --
+  name : VARCHAR
+  color : VARCHAR
+  type : ENUM
+}
+
+entity "Transaction" as transaction {
+  * id : BIGINT
+  --
+  amount : DECIMAL
+  description : VARCHAR
+  date : DATE
+  type : ENUM
+}
+
+entity "Budget" as budget {
+  * id : BIGINT
+  --
+  amount : DECIMAL
+  month : INTEGER
+  year : INTEGER
+}
+
+role ||--o{ user
+
+user ||--o{ category
+
+user ||--o{ transaction
+
+category ||--o{ transaction
+
+user ||--o{ budget
+
+category ||--o{ budget
+
+@enduml
