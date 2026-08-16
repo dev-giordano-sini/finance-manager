@@ -6,12 +6,9 @@ import it.financemanager.role.Role;
 import it.financemanager.role.RoleStore;
 import it.financemanager.user.User;
 import it.financemanager.user.UserStore;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Locale;
 
-@Service
 public class AuthService implements AuthUseCase {
     private final UserStore users;
     private final PasswordHasher passwordHasher;
@@ -22,7 +19,6 @@ public class AuthService implements AuthUseCase {
         this.users = users; this.passwordHasher = passwordHasher; this.authenticator = authenticator; this.tokens = tokens;
         this.roles = roles;
     }
-    @Transactional
     public AuthResponse register(RegisterCommand command) {
         String email = command.email().trim().toLowerCase(Locale.ROOT);
         if (users.existsByEmailIgnoreCase(email)) throw new ConflictException("An account with this email already exists");

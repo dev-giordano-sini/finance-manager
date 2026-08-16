@@ -1,9 +1,7 @@
 package it.financemanager.user;
 
 import it.financemanager.common.exception.ResourceNotFoundException;
-import org.springframework.stereotype.Service;
 
-@Service
 public class CurrentUserService implements CurrentUserUseCase, CurrentUserProvider {
     private final UserStore repository;
     private final AuthenticatedIdentity identity;

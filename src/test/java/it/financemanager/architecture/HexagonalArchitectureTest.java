@@ -57,6 +57,17 @@ class HexagonalArchitectureTest {
         assertThat(violations).as("framework entry points outside infrastructure").isEmpty();
     }
 
+    @Test
+    void applicationServicesDoNotImportSpring() throws IOException {
+        List<Path> violations = javaSources()
+                .filter(path -> path.getFileName().toString().endsWith("Service.java"))
+                .filter(path -> !path.toString().contains("/infrastructure/"))
+                .filter(path -> containsAny(path, "org.springframework", "jakarta.transaction"))
+                .toList();
+
+        assertThat(violations).as("framework imports in application services").isEmpty();
+    }
+
     private java.util.stream.Stream<Path> javaSources() throws IOException {
         return Files.walk(SOURCES).filter(path -> path.toString().endsWith(".java"));
     }

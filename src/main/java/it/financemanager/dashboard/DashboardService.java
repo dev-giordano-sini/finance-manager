@@ -5,8 +5,6 @@ import it.financemanager.transaction.TransactionStore;
 import it.financemanager.transaction.TransactionResponse;
 import it.financemanager.transaction.TransactionType;
 import it.financemanager.user.CurrentUserProvider;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -18,8 +16,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-@Service
-@Transactional(readOnly = true)
 public class DashboardService implements DashboardUseCase {
     private static final BigDecimal ZERO = new BigDecimal("0.00");
 

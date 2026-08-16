@@ -4,14 +4,9 @@ import it.financemanager.common.exception.ConflictException;
 import it.financemanager.common.exception.ResourceNotFoundException;
 import it.financemanager.user.CurrentUserService;
 import it.financemanager.user.User;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Service
-@Transactional(readOnly = true)
 public class CategoryService implements CategoryUseCase {
     private final CategoryStore repository;
     private final CurrentUserProvider currentUser;
@@ -30,20 +25,14 @@ public class CategoryService implements CategoryUseCase {
         return map(find(id, currentUser.get().getId()));
     }
 
-    @Transactional
     public CategoryResponse create(SaveCategoryCommand request) {
         User user = currentUser.get();
         String name = request.name().trim();
         if (repository.existsByUserIdAndNameIgnoreCase(user.getId(), name))
             throw new ConflictException("Category name already exists");
-        try {
-            return map(repository.saveAndFlush(new Category(user, name, request.color().toUpperCase())));
-        } catch (DataIntegrityViolationException ex) {
-            throw new ConflictException("Category name already exists");
-        }
+        return map(repository.saveAndFlush(new Category(user, name, request.color().toUpperCase())));
     }
 
-    @Transactional
     public CategoryResponse update(Long id, SaveCategoryCommand request) {
         User user = currentUser.get();
         Category category = find(id, user.getId());
@@ -54,15 +43,10 @@ public class CategoryService implements CategoryUseCase {
         return map(category);
     }
 
-    @Transactional
     public void delete(Long id) {
         Category category = find(id, currentUser.get().getId());
-        try {
-            repository.delete(category);
-            repository.flush();
-        } catch (DataIntegrityViolationException ex) {
-            throw new ConflictException("Category is in use and cannot be deleted");
-        }
+        repository.delete(category);
+        repository.flush();
     }
 
     public Category find(Long id, Long userId) {
