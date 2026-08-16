@@ -38,17 +38,21 @@ public class TransactionController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     TransactionResponse create(@Valid @RequestBody TransactionRequest request) {
-        return service.create(request);
+        return service.create(command(request));
     }
 
     @PutMapping("/{id}")
     TransactionResponse update(@PathVariable Long id, @Valid @RequestBody TransactionRequest request) {
-        return service.update(id, request);
+        return service.update(id, command(request));
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     void delete(@PathVariable Long id) {
         service.delete(id);
+    }
+
+    private SaveTransactionCommand command(TransactionRequest value) {
+        return new SaveTransactionCommand(value.categoryId(), value.type(), value.amount(), value.date(), value.description());
     }
 }

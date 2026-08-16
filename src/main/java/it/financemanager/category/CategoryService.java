@@ -31,7 +31,7 @@ public class CategoryService implements CategoryUseCase {
     }
 
     @Transactional
-    public CategoryResponse create(CategoryRequest request) {
+    public CategoryResponse create(SaveCategoryCommand request) {
         User user = currentUser.get();
         String name = request.name().trim();
         if (repository.existsByUserIdAndNameIgnoreCase(user.getId(), name))
@@ -44,7 +44,7 @@ public class CategoryService implements CategoryUseCase {
     }
 
     @Transactional
-    public CategoryResponse update(Long id, CategoryRequest request) {
+    public CategoryResponse update(Long id, SaveCategoryCommand request) {
         User user = currentUser.get();
         Category category = find(id, user.getId());
         String name = request.name().trim();

@@ -14,7 +14,11 @@ public class AuthController {
     private final AuthUseCase service;
     public AuthController(AuthUseCase service) { this.service = service; }
     @PostMapping("/register") @ResponseStatus(HttpStatus.CREATED)
-    AuthResponse register(@Valid @RequestBody RegisterRequest request) { return service.register(request); }
+    AuthResponse register(@Valid @RequestBody RegisterRequest request) {
+        return service.register(new RegisterCommand(request.name(), request.surname(), request.email(), request.password()));
+    }
     @PostMapping("/login")
-    AuthResponse login(@Valid @RequestBody LoginRequest request) { return service.login(request); }
+    AuthResponse login(@Valid @RequestBody LoginRequest request) {
+        return service.login(new LoginCommand(request.email(), request.password()));
+    }
 }

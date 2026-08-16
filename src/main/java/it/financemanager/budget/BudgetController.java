@@ -3,7 +3,8 @@ import jakarta.validation.Valid; import org.springframework.http.HttpStatus; imp
 @RestController @RequestMapping("/api/v1/budgets")
 public class BudgetController { private final BudgetUseCase service; public BudgetController(BudgetUseCase service){this.service=service;}
  @GetMapping List<BudgetResponse> list(){return service.list();} @GetMapping("/{id}") BudgetResponse get(@PathVariable Long id){return service.get(id);}
- @PostMapping @ResponseStatus(HttpStatus.CREATED) BudgetResponse create(@Valid @RequestBody BudgetRequest request){return service.create(request);}
- @PutMapping("/{id}") BudgetResponse update(@PathVariable Long id,@Valid @RequestBody BudgetRequest request){return service.update(id,request);}
+ @PostMapping @ResponseStatus(HttpStatus.CREATED) BudgetResponse create(@Valid @RequestBody BudgetRequest request){return service.create(command(request));}
+ @PutMapping("/{id}") BudgetResponse update(@PathVariable Long id,@Valid @RequestBody BudgetRequest request){return service.update(id,command(request));}
  @DeleteMapping("/{id}") @ResponseStatus(HttpStatus.NO_CONTENT) void delete(@PathVariable Long id){service.delete(id);}
+ private SaveBudgetCommand command(BudgetRequest value){return new SaveBudgetCommand(value.categoryId(),value.amount(),value.startDate(),value.endDate());}
 }

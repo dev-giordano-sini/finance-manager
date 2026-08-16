@@ -23,17 +23,17 @@ public class AuthService implements AuthUseCase {
         this.roles = roles;
     }
     @Transactional
-    public AuthResponse register(RegisterRequest request) {
-        String email = request.email().trim().toLowerCase(Locale.ROOT);
+    public AuthResponse register(RegisterCommand command) {
+        String email = command.email().trim().toLowerCase(Locale.ROOT);
         if (users.existsByEmailIgnoreCase(email)) throw new ConflictException("An account with this email already exists");
         Role user = roles.findByCode(BaseRole.ROLE_USER.getRole())
                 .orElseThrow(() -> new IllegalStateException("Default USER role is not configured"));
-        users.saveAndFlush(new User(email, passwordHasher.hash(request.password()), request.name().trim(), request.surname(), user));
+        users.saveAndFlush(new User(email, passwordHasher.hash(command.password()), command.name().trim(), command.surname(), user));
         return token(email);
     }
-    public AuthResponse login(LoginRequest request) {
-        String email = request.email().trim().toLowerCase(Locale.ROOT);
-        authenticator.authenticate(email, request.password());
+    public AuthResponse login(LoginCommand command) {
+        String email = command.email().trim().toLowerCase(Locale.ROOT);
+        authenticator.authenticate(email, command.password());
         return token(email);
     }
     private AuthResponse token(String email) { return new AuthResponse(tokens.issue(email), "Bearer", tokens.expiresInSeconds()); }

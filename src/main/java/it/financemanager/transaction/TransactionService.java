@@ -21,11 +21,11 @@ public class TransactionService implements TransactionUseCase {
         return new PageResult<>(page.content().stream().map(this::map).toList(), page.page(), page.size(), page.totalElements(), page.totalPages());
     }
     public TransactionResponse get(Long id) { return map(find(id, currentUser.get().getId())); }
-    @Transactional public TransactionResponse create(TransactionRequest request) {
+    @Transactional public TransactionResponse create(SaveTransactionCommand request) {
         User user=currentUser.get(); Category category=categories.find(request.categoryId(), user.getId());
         return map(repository.save(new Transaction(user, category, request.type(), request.amount(), request.date(), clean(request.description()))));
     }
-    @Transactional public TransactionResponse update(Long id, TransactionRequest request) {
+    @Transactional public TransactionResponse update(Long id, SaveTransactionCommand request) {
         User user=currentUser.get(); Transaction value=find(id,user.getId()); Category category=categories.find(request.categoryId(),user.getId());
         value.update(category,request.type(),request.amount(),request.date(),clean(request.description())); return map(value);
     }
