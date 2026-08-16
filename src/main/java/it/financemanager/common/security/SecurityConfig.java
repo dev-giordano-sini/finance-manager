@@ -3,8 +3,8 @@ package it.financemanager.common.security;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.financemanager.role.BaseRole;
 import it.financemanager.role.Role;
-import it.financemanager.role.RoleRepository;
-import it.financemanager.user.UserRepository;
+import it.financemanager.role.RoleStore;
+import it.financemanager.user.UserStore;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -39,7 +39,7 @@ import java.util.List;
 @EnableConfigurationProperties(JwtProperties.class)
 public class SecurityConfig {
     @Bean
-    UserDetailsService userDetailsService(UserRepository repository, RoleRepository roleRepository) {
+    UserDetailsService userDetailsService(UserStore repository, RoleStore roleRepository) {
         Role userRole = roleRepository.findByCode(BaseRole.ROLE_USER.getRole()).orElse(new Role(BaseRole.ROLE_USER.getRole(), ""));
         return email -> repository.findByEmailIgnoreCase(email)
                 .map(user -> User.withUsername(user.getEmail()).password(user.getPassword()).roles(userRole.getCode()).build())
